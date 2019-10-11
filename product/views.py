@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from product.forms import (
-    ProductForm, ProductDetailForm, StockInForm, StockOutForm
+    ProductCategoryForm, ProductForm, StockInForm, StockOutForm
 )
 from product.models import (
-    Product, ProductDetail
+    ProductCategory, Product, StockIn, StockOut
 )
 from django.views.generic import ListView, FormView, UpdateView
 from django.http import HttpResponseRedirect
@@ -12,41 +12,41 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 
 
+class AddProductCategory(FormView):
+    form_class = ProductCategoryForm
+    template_name = 'product/add_category.html'
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(reverse('product:add'))
+
+    def form_invalid(self, form):
+        return super(AddProductCategory, self).form_invalid(form)
+
+
 class AddProduct(FormView):
     form_class = ProductForm
     template_name = 'product/add_product.html'
 
     def form_valid(self, form):
         form.save()
-        return HttpResponseRedirect(reverse('product:add_detail'))
+        return HttpResponseRedirect(reverse('product:list'))
 
     def form_invalid(self, form):
         return super(AddProduct, self).form_invalid(form)
 
-
-class AddProductDetail(FormView):
-    form_class = ProductDetailForm
-    template_name = 'product/add_product_detail.html'
-
-    def form_valid(self, form):
-        form.save()
-        return HttpResponseRedirect(reverse('product:list'))
-
-    def form_invalid(self, form):
-        return super(AddProductDetail, self).form_invalid(form)
-
     def get_context_data(self, **kwargs):
-        context = super(AddProductDetail, self).get_context_data(**kwargs)
-        product = Product.objects.all()
+        context = super(AddProduct, self).get_context_data(**kwargs)
+        category = ProductCategory.objects.all()
         context.update({
-            'products': product
+            'category': category
         })
         return context
 
 
 class UpdateProduct(UpdateView):
-    model = ProductDetail
-    form_class = ProductDetailForm
+    model = Product
+    form_class = ProductForm
     template_name = 'product/update_product.html'
 
     def form_valid(self, form):
@@ -66,7 +66,7 @@ class UpdateProduct(UpdateView):
 
 
 class ProductList(ListView):
-    model = ProductDetail
+    model = Product
     template_name = 'product/product_list.html'
     paginate_by = 100
     is_paginated = True
@@ -74,9 +74,9 @@ class ProductList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProductList, self).get_context_data(**kwargs)
-        detail = ProductDetail.objects.all()
+        product = Product.objects.all()
         context.update({
-            'details': detail
+            'products': product
         })
         return context
 
@@ -87,7 +87,7 @@ class StockInProduct(FormView):
 
     def form_valid(self, form):
         form.save()
-        return HttpResponseRedirect(reverse('product:list'))
+        return HttpResponseRedirect(reverse('product:stock_detail'))
 
     def form_invalid(self, form):
         return super(StockInProduct, self).form_invalid(form)
@@ -96,12 +96,12 @@ class StockInProduct(FormView):
         context = super(StockInProduct, self).get_context_data(**kwargs)
         try:
             product = (
-                ProductDetail.objects.get(id=self.kwargs.get('pk'))
+                Product.objects.get(id=self.kwargs.get('pk'))
             )
         except ObjectDoesNotExist:
             raise Http404('Product not found')
         context.update({
-            'products': product
+            'product': product
         })
         return context
 
@@ -112,7 +112,7 @@ class StockOutProduct(FormView):
 
     def form_valid(self, form):
         form.save()
-        return HttpResponseRedirect(reverse('product:list'))
+        return HttpResponseRedirect(reverse('product:stock_detail'))
 
     def form_invalid(self, form):
         return super(StockOutProduct, self).form_invalid(form)
@@ -122,7 +122,7 @@ class StockOutProduct(FormView):
 
         try:
             product = (
-                ProductDetail.objects.get(id=self.kwargs.get('pk'))
+                Product.objects.get(id=self.kwargs.get('pk'))
             )
         except ObjectDoesNotExist:
             raise Http404('Product not found')
@@ -133,26 +133,23 @@ class StockOutProduct(FormView):
         return context
 
 
-class StockDetail(ListView):
-    template_name = 'product/stock_detail.html'
+class StockInDetail(ListView):
+    template_name = 'product/stockin_detail.html'
+    paginate_by = 100
+    model = StockIn
+    ordering = '-id'
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if not queryset:
+            queryset = StockIn.objects.all()
+
+        queryset = queryset.filter(product=self.kwargs.get('pk'))
+        return queryset.order_by('-id')
 
     def get_context_data(self, **kwargs):
-        context = super(StockDetail, self).get_context_data(**kwargs)
-
-        try:
-            item = (
-                ProductDetail.objects.get(id=self.kwargs.get('pk'))
-            )
-        except StockInProduct.DoesNotExist:
-            return Http404('Item does not exists in database')
-
-        item_stock_in = item.product_stockin.all()
-        item_stock_out = item.product_stockout.all()
-
+        context = super(StockInDetail, self).get_context_data(**kwargs)
         context.update({
-            'item': item,
-            'item_stock_in': item_stock_in.order_by('-date'),
-            'item_stock_out': item_stock_out.order_by('-date')
+            'stock_in': StockIn.objects.get(id=self.kwargs.get('pk'))
         })
-
         return context

@@ -6,7 +6,6 @@
     <section class="content-header">
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">Preference</a></li>
             <li class="active">List</li>
         </ol>
     </section>
@@ -17,6 +16,7 @@
                     <div class="box-header">
                         <h3 class="box-title">All List</h3>
                     </div>
+                    <a href="{% url 'product:add_category' %}"><button type="button" id="add-category" class="btn btn-primary" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Add New Category </button></a>
                     <div class="box-body">
                         <div class="table-responsive">
                             <table class="table align-items-center table-striped table-bordered table-hover">
@@ -33,18 +33,18 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for detail in details %}
+                                {% for product in products %}
                                 <tr>
-                                    <td>{{detail.product.name|title}}</td>
-                                    <td>{{detail.category|title}}</td>
-                                    <td>{{detail.litre|title}}</td>
-                                    <td>{{detail.quantity|title}}</td>
-                                    <td>{{detail.unit_price|title}}</td>
-                                    <td>{{detail.amount|title}}</td>
-                                    <td>{{detail.date|title}}</td>
+                                    <td>{{product.name|title}}</td>
+                                    <td>{{product.category|title}}</td>
+                                    <td>{{product.litre|title}}</td>
+                                    <td>{{product.quantity|title}}</td>
+                                    <td>{{product.unit_price|title}}</td>
+                                    <td>{{product.amount|title}}</td>
+                                    <td>{{product.date|title}}</td>
                                     <td class="text-center">
-                                        <a href="{% url 'product:update' pk=detail.id %}"><button class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></button></a>
-                                        <a href="{% url 'product:add_stock' pk=detail.id %}"><button class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></button></a>
+                                        <a href="{% url 'product:update' pk=product.id %}"><button class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></button></a>
+                                        <a href="{% url 'product:add_stock' pk=product.id %}"><button class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></button></a>
                                     </td>
                                 </tr>
                                 {% endfor %}

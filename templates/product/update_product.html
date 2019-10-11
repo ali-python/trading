@@ -23,19 +23,19 @@
                     <div class="box-body">
                         <form action="{% url 'product:update' pk=object.id %}" method="post" autocomplete="off">
                             {% csrf_token %}
-                            <div class="col-lg-6 form-group">
-                                <label class="form-control-label" name="name">Name<span style="color:red">*</span></label>
-                                <select class="form-control" name="product">
-                                    <option value="{{object.product.id}}">{{object.product.name}}</option>
-                                    {% for product in products %}
-                                    <option value="{{product.id}}">{{product.name}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
                             <div class="row">
                                 <div class="col-lg-6 form-group">
-                                    <label class="form-control-label">Category <span style="color:red">*</span></label>
-                                    <input type="text" name="category" class="form-control form-control-alternative" value="{{object.category}}" ><br>
+                                    <label class="form-control-label">Name <span style="color:red">*</span></label>
+                                    <input type="text" name="name" class="form-control form-control-alternative" value="{{object.name}}" ><br>
+                                    <div class="col-lg-6 form-group">
+                                        <label class="form-control-label" name="category">Category<span style="color:red">*</span></label>
+                                        <select class="form-control" name="category">
+                                            <option value="{{object.category.id}}">{{object.category.category}}</option>
+                                            {% for category in category %}
+                                                <option value="{{category.id}}">{{category.category}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
                                     <label class="form-control-label">Litre <span style="color:red">*</span></label>
                                     <input type="text" name="litre" class="form-control form-control-alternative" value="{{object.litre}}" ><br>
                                     <label class="form-control-label">Quantity <span style="color:red">*</span></label>
@@ -45,7 +45,7 @@
                                     <label class="form-control-label">Amount <span style="color:red">*</span></label>
                                     <input type="text" name="amount" class="form-control form-control-alternative" value="{{object.amount}}" ><br>
                                     <label class="form-control-label">Date <span style="color:red">*</span></label>
-                                    <input type="date" name="date" class="form-control form-control-alternative" value="{{object.date}}" ><br>
+                                    <input type="date" name="date" class="form-control form-control-alternative" value="{{object.date}}" onfocus="(this.type='date')" onblur="(this.type='text')"><br>
                                 </div>
                             </div>
                             <div class="row">

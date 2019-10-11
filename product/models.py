@@ -3,18 +3,18 @@ from django.utils import timezone
 from django.db.models import Sum
 
 
-class Product(models.Model):
-    name = models.CharField(max_length=200, null=True, blank=True)
+class ProductCategory(models.Model):
+    category = models.CharField(max_length=200, null=True, blank=True)
     date = models.DateField(default=timezone.now, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.category
 
 
-class ProductDetail(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,
-                                null=True, blank=True, related_name='product_detail')
-    category = models.CharField(max_length=200, null=True, blank=True)
+class Product(models.Model):
+    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE,
+                                 null=True, blank=True, related_name='product_category')
+    name = models.CharField(max_length=200, null=True, blank=True)
     litre = models.DecimalField(max_digits=65, decimal_places=2, default=0,
                                 null=True, blank=True)
     quantity = models.DecimalField(max_digits=65, decimal_places=2, default=0,
@@ -26,11 +26,11 @@ class ProductDetail(models.Model):
     date = models.DateField(default=timezone.now, null=True, blank=True)
 
     def __str__(self):
-        return str(self.product)
+        return self.name
 
     def total_items(self):
         try:
-            obj_stock_in = self.product_stockin.aggregate(Sum('stock_quantity'))
+            obj_stock_in = self.stockin_product.aggregate(Sum('stock_quantity'))
             stock_in = float(obj_stock_in.get('stock_quantity__sum'))
         except:
             stock_in = 0
@@ -39,12 +39,12 @@ class ProductDetail(models.Model):
 
     def product_available_items(self):
         try:
-            obj_stock_in = self.product_stockin.aggregate(Sum('stock_quantity'))
+            obj_stock_in = self.stockin_product.aggregate(Sum('stock_quantity'))
             stock_in = float(obj_stock_in.get('stock_quantity__sum'))
         except:
             stock_in = 0
         try:
-            obj_stock_out = self.product_stockout.aggregate(
+            obj_stock_out = self.stockout_product.aggregate(
                 Sum('stock_out_quantity'))
             stock_out = float(obj_stock_out.get('stock_out_quantity__sum'))
         except:
@@ -54,24 +54,33 @@ class ProductDetail(models.Model):
 
 
 class StockIn(models.Model):
-    product = models.ForeignKey(ProductDetail, on_delete=models.CASCADE,
-                                null=True, blank=True, related_name='product_stockin')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,
+                                null=True, blank=True, related_name='stockin_product')
     stock_quantity = models.CharField(max_length=200, null=True, blank=True)
     price_per_item = models.DecimalField(max_digits=65, decimal_places=2, default=0,
                                          null=True, blank=True)
     total_amount = models.DecimalField(max_digits=65, decimal_places=2, default=0,
                                        null=True, blank=True)
-    date = models.DateField(default=timezone.now, null=True, blank=True)
+    buying_price_item = models.DecimalField(max_digits=65, decimal_places=2, default=0,
+                                            null=True, blank=True,
+                                            help_text='Buying Price for a Single Item')
+    total_buying_amount = models.DecimalField(max_digits=65, decimal_places=2, default=0,
+                                              null=True, blank=True)
+    dated_order = models.DateField(default=timezone.now, null=True, blank=True)
 
     def __str__(self):
         return str(self.product)
 
 
 class StockOut(models.Model):
-    product = models.ForeignKey(ProductDetail, on_delete=models.CASCADE,
-                                null=True, blank=True, related_name='product_stockout')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,
+                                null=True, blank=True, related_name='stockout_product')
     stock_out_quantity = models.DecimalField(max_digits=65, decimal_places=2,
                                              default=0, null=True, blank=True)
+    selling_price = models.DecimalField(max_digits=65, decimal_places=2, default=0,
+                                        null=True, blank=True)
+    buying_price = models.DecimalField(max_digits=65, decimal_places=2, default=0,
+                                            null=True, blank=True)
     date = models.DateField(default=timezone.now, null=True, blank=True)
 
     def __str__(self):
