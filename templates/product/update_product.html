@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load staticfiles %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Product</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <!-- Info boxes -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Product Detail Update</h3>
+                    </div>
+                    <div class="box-body">
+                        <form action="{% url 'product:update' pk=object.id %}" method="post" autocomplete="off">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-lg-6 form-group">
+                                    <label class="form-control-label">Name <span style="color:red">*</span></label>
+                                    <input type="text" name="name" class="form-control form-control-alternative" value="{{object.name}}" ><br>
+                                    <div class="col-lg-6 form-group">
+                                        <label class="form-control-label" name="category">Category<span style="color:red">*</span></label>
+                                        <select class="form-control" name="category">
+                                            <option value="{{object.category.id}}">{{object.category.category}}</option>
+                                            {% for category in category %}
+                                                <option value="{{category.id}}">{{category.category}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <label class="form-control-label">Litre <span style="color:red">*</span></label>
+                                    <input type="text" name="litre" class="form-control form-control-alternative" value="{{object.litre}}" ><br>
+                                    <label class="form-control-label">Quantity <span style="color:red">*</span></label>
+                                    <input type="text" name="quantity" class="form-control form-control-alternative" value="{{object.quantity}}" ><br>
+                                    <label class="form-control-label">Uint Price <span style="color:red">*</span></label>
+                                    <input type="text" name="unit_price" class="form-control form-control-alternative" value="{{object.unit_price}}" ><br>
+                                    <label class="form-control-label">Amount <span style="color:red">*</span></label>
+                                    <input type="text" name="amount" class="form-control form-control-alternative" value="{{object.amount}}" ><br>
+                                    <label class="form-control-label">Date <span style="color:red">*</span></label>
+                                    <input type="date" name="date" class="form-control form-control-alternative" value="{{object.date}}" onfocus="(this.type='date')" onblur="(this.type='text')"><br>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-2 form-group">
+                                    <label class="form-control-label"></label>
+                                    <button type="submit" value="Create" class="btn btn-primary form-control">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}
