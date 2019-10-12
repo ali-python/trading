@@ -20,7 +20,6 @@
                     <div class="box-header">
                         <h3 class="box-title">Add Stock Item</h3>
                     </div>
-                        <a href="{% url 'product:stock_out' %}"><button type="button" id="add-category" class="btn btn-primary" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Add New Category </button></a>
                     <div class="box-body">
                         <form action="{% url 'product:add_stock' pk=product.id %}" method="post" autocomplete="off">
                             {% csrf_token %}

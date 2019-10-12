@@ -86,8 +86,9 @@ class StockInProduct(FormView):
     template_name = 'product/add_stock_item.html'
 
     def form_valid(self, form):
-        form.save()
-        return HttpResponseRedirect(reverse('product:stock_detail'))
+        obj = form.save()
+        return HttpResponseRedirect(reverse('product:stockin_detail',
+                                            kwargs={'pk': obj.product.id}))
 
     def form_invalid(self, form):
         return super(StockInProduct, self).form_invalid(form)
@@ -108,11 +109,11 @@ class StockInProduct(FormView):
 
 class StockOutProduct(FormView):
     form_class = StockOutForm
-    template_name = 'product/stock_out_product.html'
+    template_name = 'product/stock_out_item.html'
 
     def form_valid(self, form):
         form.save()
-        return HttpResponseRedirect(reverse('product:stock_detail'))
+        return HttpResponseRedirect(reverse('product:stockout_detail'))
 
     def form_invalid(self, form):
         return super(StockOutProduct, self).form_invalid(form)
@@ -150,6 +151,28 @@ class StockInDetail(ListView):
     def get_context_data(self, **kwargs):
         context = super(StockInDetail, self).get_context_data(**kwargs)
         context.update({
-            'stock_in': StockIn.objects.get(id=self.kwargs.get('pk'))
+            'product': Product.objects.get(id=self.kwargs.get('pk'))
+        })
+        return context
+
+
+class StockOutDetail(ListView):
+    template_name = 'product/stockout_detail.html'
+    paginate_by = 100
+    model = StockOut
+    ordering = '-id'
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if not queryset:
+            queryset = StockOut.objects.all()
+
+        queryset = queryset.filter(product=self.kwargs.get('pk'))
+        return queryset.order_by('-id')
+
+    def get_context_data(self, **kwargs):
+        context = super(StockOutDetail, self).get_context_data(**kwargs)
+        context.update({
+            'product': Product.objects.get(id=self.kwargs.get('pk'))
         })
         return context

@@ -21,7 +21,7 @@
                         <h3 class="box-title">Stock Out Item</h3>
                     </div>
                     <div class="box-body">
-                        <form action="{% url 'product:stock_out' pk=product.id %}" method="post" autocomplete="off">
+                        <form action="" method="post" autocomplete="off">
                             {% csrf_token %}
                             <div class="col-lg-6 form-group">
                                 <label class="form-control-label" >Name & Category<span style="color:red">*</span></label>
@@ -32,7 +32,7 @@
                             <div class="row">
                                 <div class="col-lg-6 form-group">
                                     <label class="form-control-label">Stock Out Quantity <span style="color:red">*</span></label>
-                                    <input type="text" name="stock_out_quantity" class="form-control form-control-alternative" placeholder="Add Stock Out Quantity" ><br>
+                                    <input type="text" name="stock_out_quantity" class="form-control form-control-alternative" placeholder="Stock Out Quantity" ><br>
                                     <label class="form-control-label">Selling Price <span style="color:red">*</span></label>
                                     <input type="text" name="selling_price" class="form-control form-control-alternative" placeholder="Selling Price" ><br>
                                     <label class="form-control-label">Buying Price <span style="color:red">*</span></label>

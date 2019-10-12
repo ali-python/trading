@@ -43,8 +43,9 @@
                                     <td>{{product.amount|title}}</td>
                                     <td>{{product.date|title}}</td>
                                     <td class="text-center">
-                                        <a href="{% url 'product:update' pk=product.id %}"><button class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></button></a>
-                                        <a href="{% url 'product:add_stock' pk=product.id %}"><button class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></button></a>
+                                        <a href="{% url 'product:update' pk=product.id %}"><button class="btn btn-primary btn-xs"><i class="fa fa-edit" title="Update"></i></button></a>
+                                        <a href="{% url 'product:stockin_detail' pk=product.id %}"><button class="btn btn-primary btn-xs"><i class="fa fa-plus" title="Stock In"></i></button></a>
+                                        <a href="{% url 'product:stockout_detail' pk=product.id %}"><button class="btn btn-primary btn-xs"><i class="fa fa-minus" title="Stock Out"></i></button></a>
                                     </td>
                                 </tr>
                                 {% endfor %}

@@ -20,6 +20,7 @@
                     <div class="box-header">
                         <h3 class="box-title">Product Detail Update</h3>
                     </div>
+                    <a href="{%url 'product:list' %}"><button type="button" id="product-list" class="btn btn-primary" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Product List </button></a>
                     <div class="box-body">
                         <form action="{% url 'product:update' pk=object.id %}" method="post" autocomplete="off">
                             {% csrf_token %}
