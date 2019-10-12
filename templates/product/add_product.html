@@ -9,7 +9,7 @@
             <li class="active">Product</li>
         </ol>
     </section>
-    <!-- Main content -->
+    <br>
     <section class="content">
         <!-- Info boxes -->
         <div class="row">
@@ -24,25 +24,39 @@
                             <div class="row">
                                 <div class="col-lg-6 form-group">
                                     <label class="form-control-label">Name <span style="color:red">*</span></label>
-                                    <input type="text" name="name" class="form-control form-control-alternative" placeholder="Name" ><br>
-                                    <div class="col-lg-6 form-group">
-                                        <label class="form-control-label" name="category">Category<span style="color:red">*</span></label>
-                                        <select class="form-control" name="category">
-                                        {% for category in category %}
-                                            <option value="{{category.id}}">{{category.category}}</option>
-                                        {% endfor %}
-                                        </select>
-                                    </div>
+                                    <input type="text" name="name" class="form-control form-control-alternative" placeholder="Name" >
+                                </div>
+                                <div class="col-lg-6 form-group">
+                                    <label class="form-control-label" name="category">Category<span style="color:red">*</span></label>
+                                    <select class="form-control form-control-alternative" name="category">
+                                    {% for category in category %}
+                                        <option value="{{category.id}}">{{category.category}}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 form-group">
                                     <label class="form-control-label">Litre <span style="color:red">*</span></label>
-                                    <input type="text" name="litre" class="form-control form-control-alternative" placeholder="Litre" ><br>
+                                    <input type="text" name="litre" class="form-control form-control-alternative" placeholder="Litre">
+                                </div>
+                                <div class="col-lg-6 form-group">
                                     <label class="form-control-label">Quantity <span style="color:red">*</span></label>
-                                    <input type="text" name="quantity" class="form-control form-control-alternative" placeholder="Quantity" ><br>
+                                    <input type="text" name="quantity" class="form-control form-control-alternative" placeholder="Quantity">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 form-group">
                                     <label class="form-control-label">Uint Price <span style="color:red">*</span></label>
-                                    <input type="text" name="unit_price" class="form-control form-control-alternative" placeholder="Uint Price" ><br>
+                                    <input type="text" name="unit_price" class="form-control form-control-alternative" placeholder="Uint Price" >
+                                </div>
+                                <div class="col-lg-4 form-group">
                                     <label class="form-control-label">Amount <span style="color:red">*</span></label>
-                                    <input type="text" name="amount" class="form-control form-control-alternative" placeholder="Amount" ><br>
+                                    <input type="text" name="amount" class="form-control form-control-alternative" placeholder="Amount" >
+                                </div>
+                                <div class="col-lg-4 form-group">
                                     <label class="form-control-label">Date <span style="color:red">*</span></label>
-                                    <input type="date" name="date" class="form-control form-control-alternative" placeholder="Date" onfocus="(this.type='date')" onblur="(this.type='text')"><br>
+                                    <input type="date" name="date" class="form-control form-control-alternative" placeholder="Date" onfocus="(this.type='date')" onblur="(this.type='text')">
                                 </div>
                             </div>
                             <div class="row">
