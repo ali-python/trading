@@ -7,7 +7,8 @@
 
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Product</li>
+            <li><a href="#">Products</a></li>
+            <li class="active">Update</li>
         </ol>
     </section>
 
@@ -20,33 +21,46 @@
                     <div class="box-header">
                         <h3 class="box-title">Product Detail Update</h3>
                     </div>
-                    <a href="{%url 'product:list' %}"><button type="button" id="product-list" class="btn btn-primary" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Product List </button></a>
                     <div class="box-body">
                         <form action="{% url 'product:update' pk=object.id %}" method="post" autocomplete="off">
                             {% csrf_token %}
                             <div class="row">
                                 <div class="col-lg-6 form-group">
                                     <label class="form-control-label">Name <span style="color:red">*</span></label>
-                                    <input type="text" name="name" class="form-control form-control-alternative" value="{{object.name}}" ><br>
-                                    <div class="col-lg-6 form-group">
-                                        <label class="form-control-label" name="category">Category<span style="color:red">*</span></label>
-                                        <select class="form-control" name="category">
-                                            <option value="{{object.category.id}}">{{object.category.category}}</option>
-                                            {% for category in category %}
-                                                <option value="{{category.id}}">{{category.category}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
+                                    <input type="text" name="name" class="form-control form-control-alternative" placeholder="Name" value="{{ object.name }}">
+                                </div>
+                                <div class="col-lg-6 form-group">
+                                    <label class="form-control-label" name="category">Category<span style="color:red">*</span></label>
+                                    <select class="form-control form-control-alternative" name="category">
+                                    <option value="{{object.category.id}}">{{object.category.category}}</option>
+                                    {% for category in categories %}
+                                        <option value="{{category.id}}">{{category.category}}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 form-group">
                                     <label class="form-control-label">Litre <span style="color:red">*</span></label>
-                                    <input type="text" name="litre" class="form-control form-control-alternative" value="{{object.litre}}" ><br>
+                                    <input type="text" name="litre" class="form-control form-control-alternative" placeholder="Litre" value="{{ object.litre|floatformat:-2 }}">
+                                </div>
+                                <div class="col-lg-6 form-group">
                                     <label class="form-control-label">Quantity <span style="color:red">*</span></label>
-                                    <input type="text" name="quantity" class="form-control form-control-alternative" value="{{object.quantity}}" ><br>
+                                    <input type="text" name="quantity" class="form-control form-control-alternative" placeholder="Quantity" value="{{ object.quantity|floatformat:-2 }}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 form-group">
                                     <label class="form-control-label">Uint Price <span style="color:red">*</span></label>
-                                    <input type="text" name="unit_price" class="form-control form-control-alternative" value="{{object.unit_price}}" ><br>
+                                    <input type="text" name="unit_price" class="form-control form-control-alternative" placeholder="Uint Price" value="{{ object.unit_price|floatformat:-2 }}">
+                                </div>
+                                <div class="col-lg-4 form-group">
                                     <label class="form-control-label">Amount <span style="color:red">*</span></label>
-                                    <input type="text" name="amount" class="form-control form-control-alternative" value="{{object.amount}}" ><br>
+                                    <input type="text" name="amount" class="form-control form-control-alternative" placeholder="Amount" value="{{ object.amount|floatformat:-2 }}">
+                                </div>
+                                <div class="col-lg-4 form-group">
                                     <label class="form-control-label">Date <span style="color:red">*</span></label>
-                                    <input type="date" name="date" class="form-control form-control-alternative" value="{{object.date}}" onfocus="(this.type='date')" onblur="(this.type='text')"><br>
+                                    <input type="date" name="date" class="form-control form-control-alternative" placeholder="Date" onfocus="(this.type='date')" onblur="(this.type='text')">
                                 </div>
                             </div>
                             <div class="row">

@@ -58,9 +58,9 @@ class UpdateProduct(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(UpdateProduct, self).get_context_data(**kwargs)
-        product = Product.objects.all()
+        categories = ProductCategory.objects.all()
         context.update({
-            'products': product
+            'categories': categories
         })
         return context
 
@@ -129,7 +129,7 @@ class StockOutProduct(FormView):
             raise Http404('Product not found')
 
         context.update({
-            'products': product
+            'product': product
         })
         return context
 
