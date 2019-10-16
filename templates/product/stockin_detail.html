@@ -36,12 +36,13 @@
                             <tbody class="product-table-body text-center">
                                 {% for stock_in in object_list %}
                                 <tr>
+                                    {% load humanize %}
                                     <td>{{ stock_in.product|title }} </td>
                                     <td>{{ stock_in.stock_quantity|floatformat:-2|title}}</td>
                                     <td>{{ stock_in.price_per_item|floatformat:-2|title }}</td>
-                                    <td>{{ stock_in.total_amount|floatformat:-2|title }}</td>
-                                    <td>{{ stock_in.buying_price_item|floatformat:-2|title }}</td>
-                                    <td>{{ stock_in.total_buying_amount|floatformat:-2|title }}</td>
+                                    <td>{{ stock_in.total_amount|floatformat:-2|intcomma|title }}</td>
+                                    <td>{{ stock_in.buying_price_item|floatformat:-2|intcomma|title }}</td>
+                                    <td>{{ stock_in.total_buying_amount|floatformat:-2|intcomma|title }}</td>
                                     <td>{{ stock_in.dated_order }}</td>
                                 </tr>
                                 {% endfor %}

@@ -112,8 +112,9 @@ class StockOutProduct(FormView):
     template_name = 'product/stock_out_item.html'
 
     def form_valid(self, form):
-        form.save()
-        return HttpResponseRedirect(reverse('product:stockout_detail'))
+        obj = form.save()
+        return HttpResponseRedirect(reverse('product:stockout_detail',
+                                            kwargs={'pk': obj.product.id}))
 
     def form_invalid(self, form):
         return super(StockOutProduct, self).form_invalid(form)

@@ -25,18 +25,19 @@
                                 <tr>
                                     <th class="text-center">Product</th>
                                     <th class="text-center">Stock Out Quantity</th>
-                                    <th class="text-center">Selling Price</th>
-                                    <th class="text-center">Buying Price</th>
+<!--                                    <th class="text-center">Selling Price</th>-->
+<!--                                    <th class="text-center">Buying Price</th>-->
                                     <th class="text-center">Dated</th>
                                 </tr>
                             </thead>
                             <tbody class="product-table-body text-center">
                                 {% for stock_out in object_list %}
                                 <tr>
+                                    {% load humanize %}
                                     <td>{{ stock_out.product|title }} </td>
                                     <td>{{ stock_out.stock_out_quantity|floatformat:-2|title}}</td>
-                                    <td>{{ stock_out.selling_price|floatformat:-2|title }}</td>
-                                    <td>{{ stock_out.buying_price|floatformat:-2|title }}</td>
+<!--                                    <td>{{ stock_out.selling_price|floatformat:-2|intcomma|title }}</td>-->
+<!--                                    <td>{{ stock_out.buying_price|floatformat:-2|intcomma|title }}</td>-->
                                     <td>{{ stock_out.date|title }}</td>
                                 </tr>
                                 {% endfor %}
