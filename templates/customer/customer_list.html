@@ -23,14 +23,9 @@
                                 <thead class="thead-dark">
                                 <tr>
                                     <th>Name</th>
-                                    <th>Father Name</th>
                                     <th>CNIC</th>
                                     <th>Mobile</th>
-                                    <th>Alternate Mobile</th>
-                                    <th>Resident</th>
-                                    <th>Address</th>
-                                    <th>City</th>
-                                    <th>Date</th>
+                                    <th>Unpaid Amount</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                                 </thead>
@@ -38,20 +33,16 @@
                                 {% for customer in customer %}
                                 <tr>
                                     <td>{{customer.name|title}}</td>
-                                    <td>{{customer.father_name|title}}</td>
-                                    <td>{{customer.cnic|title}}</td>
-                                    <td>{{customer.mobile|title}}</td>
-                                    <td>{{customer.alternate_mobile|title}}</td>
-                                    <td>{{customer.resident|title}}</td>
-                                    <td>{{customer.address|title}}</td>
-                                    <td>{{customer.city|title}}</td>
-                                    <td>{{customer.date|title}}</td>
+                                    <td>{{customer.cnic}}</td>
+                                    <td>{{customer.mobile}}</td>
+                                    <td>0</td>
                                     <td class="text-center">
                                         <a href="{% url 'customer:update' pk=customer.id %}"><button class="btn btn-primary btn-xs">Update</button></a>
+                                        <a href="#"><button class="btn btn-info btn-xs">Ledger</button></a>
+
                                     </td>
                                 </tr>
                                 {% endfor %}
-
                                 </tbody>
                             </table>
                         </div>
