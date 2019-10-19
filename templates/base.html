@@ -307,7 +307,7 @@
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu" data-widget="tree">
 
-                    <li><a href="#"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                    <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-files-o"></i> <span>Product</span>
@@ -341,8 +341,8 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="#"><i class="fa fa-circle-o"></i>Create</a></li>
-                            <li><a href="#"><i class="fa fa-circle-o"></i>List</a></li>
+                            <li><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Create Customer</a></li>
+                            <li><a href="{% url 'customer:list' %}"><i class="fa fa-circle-o"></i>List</a></li>
                         </ul>
                     </li>                    <li class="treeview">
                         <a href="#">

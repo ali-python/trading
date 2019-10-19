@@ -6,7 +6,7 @@
     <section class="content-header">
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">List</li>
+            <li class="active">Products</li>
         </ol>
     </section>
     <br>
@@ -15,7 +15,7 @@
             <div class="col-lg-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">All List</h3>
+                        <h2 class="box-title">Products</h2>
                     </div>
                     <div class="box-body">
                         <div class="table-responsive">
@@ -35,16 +35,18 @@
                                 <tbody>
                                 {% for product in products %}
                                 <tr>
+                                    {% load humanize %}
                                     <td>{{product.name|title}}</td>
                                     <td>{{product.category|title}}</td>
-                                    <td>{{product.litre|title}}</td>
-                                    <td>{{product.quantity|title}}</td>
-                                    <td>{{product.unit_price|title}}</td>
-                                    <td>{{product.amount|title}}</td>
-                                    <td>{{product.date|title}}</td>
+                                    <td>{{product.litre|floatformat:-2}}</td>
+                                    <td>{{product.quantity|floatformat:-2}}</td>
+                                    <td>{{product.unit_price|floatformat:-2|intcomma}}</td>
+                                    <td>{{product.amount|floatformat:-2|intcomma}}</td>
+                                    <td>{{product.date}}</td>
                                     <td class="text-center">
-                                        <a href="{% url 'product:update' pk=product.id %}"><button class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></button></a>
-                                        <a href="{% url 'product:add_stock' pk=product.id %}"><button class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></button></a>
+                                        <a href="{% url 'product:update' pk=product.id %}"><button class="btn btn-primary btn-xs">Update</button></a>
+                                        <a href="{% url 'product:stockin_detail' pk=product.id %}"><button class="btn btn-success btn-xs">Stock In</button></a>
+                                        <a href="{% url 'product:stockout_detail' pk=product.id %}"><button class="btn btn-danger btn-xs">Stock Out</button></a>
                                     </td>
                                 </tr>
                                 {% endfor %}
