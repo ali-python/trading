@@ -323,18 +323,6 @@
                     </li>
                     <li class="treeview">
                         <a href="#">
-                            <i class="fa fa-files-o"></i> <span>Payment Plans</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                        <li><a href="#"><i class="fa fa-paypal"></i> <span>Simple Payment Plans</span></a></li>
-                        <li><a href="#"><i class="fa fa-circle-o"></i>Percentage Payment Plan</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a href="#">
                             <i class="fa fa-user"></i> <span>Customers</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
@@ -344,7 +332,20 @@
                             <li><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Create Customer</a></li>
                             <li><a href="{% url 'customer:list' %}"><i class="fa fa-circle-o"></i>List</a></li>
                         </ul>
-                    </li>                    <li class="treeview">
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-files-o"></i> <span>Expense System</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                        <li><a href="{% url 'expense:add' %}"><i class="fa fa-paypal"></i> <span>Add Expense</span></a></li>
+                        <li><a href="{% url 'expense:list' %}"><i class="fa fa-circle-o"></i>Expense List</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
                         <a href="#">
                             <i class="fa fa-comment"></i> <span>Agents</span>
                             <span class="pull-right-container">
