@@ -38,7 +38,7 @@
                                     <td>0</td>
                                     <td class="text-center">
                                         <a href="{% url 'customer:update' pk=customer.id %}"><button class="btn btn-primary btn-xs">Update</button></a>
-                                        <a href="#"><button class="btn btn-info btn-xs">Ledger</button></a>
+                                        <a href="{% url 'customer:ledger_list' pk=customer.id %}"><button class="btn btn-info btn-xs">Ledger</button></a>
 
                                     </td>
                                 </tr>
