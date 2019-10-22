@@ -21,6 +21,9 @@ class CustomerLedger(models.Model):
     customer = models.ForeignKey(
         Customer, on_delete=models.CASCADE, related_name='customer_ledger'
     )
+    invoice = models.ForeignKey(
+        'sales.Invoice', related_name='invoice_ledger', blank=True, null=True, on_delete=models.CASCADE
+    )
     debit_amount = models.DecimalField(
         max_digits=65, decimal_places=2, default=0, blank=True, null=True
     )

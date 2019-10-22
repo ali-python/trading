@@ -1,5 +1,5 @@
 from django.contrib import admin
-from product.models import ProductCategory, Product, StockIn, StockOut
+from product.models import ProductCategory, Product, StockIn, StockOut, PurchasedItem
 
 
 class ProductCategoryAdmin(admin.ModelAdmin):
@@ -31,12 +31,26 @@ class StockInAdmin(admin.ModelAdmin):
 
 class StockOutAdmin(admin.ModelAdmin):
     list_display = (
-        '__str__', 'category', 'stock_out_quantity', 'selling_price', 'buying_price', 'date'
+        '__str__', 'category', 'invoice', 'stock_out_quantity', 'selling_price', 'buying_price', 'date'
     )
 
     @staticmethod
     def category(obj):
         return obj.product.category
+
+    @staticmethod
+    def invoice(obj):
+        return str(obj.invoice.id).zfill(7) if obj.invoice else ''
+
+
+class PurchasedItemAdmin(admin.ModelAdmin):
+    list_display = (
+        '__str__', 'invoice', 'quantity', 'price', 'purchase_amount', 'date'
+    )
+
+    @staticmethod
+    def invoice(obj):
+        return str(obj.invoice.id).zfill(7)
 
 
 admin.site.register(ProductCategory, ProductCategoryAdmin)
