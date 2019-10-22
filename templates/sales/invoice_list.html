@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="content-wrapper">
+    <section class="content-header">
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
+            <li><a href="#">Invoices</a></li>
+            <li class="active">Create</li>
+        </ol>
+    </section>
+    <br>
+    <section class="content">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h2 class="box-title">Invoices</h2>
+                    </div>
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <table class="table align-items-center table-striped table-bordered table-hover">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Invoice</th>
+                                        <th>Customer</th>
+                                        <th>Quantity</th>
+                                        <th>Sub Total</th>
+                                        <th>Grand Total</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% if not object_list %}
+                                    <tr><td colspan="7" class="text-center">No Invoices Found!</td></tr>
+                                {% endif %}
+                                {% for invoice in object_list %}
+                                    <tr>
+                                        <td>{{ invoice.date }}</td>
+                                        <td>{{ invoice.id|stringformat:"04d" }}</td>
+                                        <td>{{ invoice.customer.name|title }}</td>
+                                        <td>{{ invoice.total_quantity|floatformat:-2 }}</td>
+                                        <td>{{ invoice.sub_total|floatformat:-2 }}</td>
+                                        <td>{{ invoice.grand_total|floatformat:-2 }}</td>
+                                        <td class="text-center">
+                                            <a href="#"><button class="btn btn-primary btn-xs">Update</button></a>
+                                            <a href="#"><button class="btn btn-info btn-xs">View</button></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
