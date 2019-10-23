@@ -1,44 +1,43 @@
 {% extends 'base.html' %}
-{% block content %}
-{% load staticfiles %}
 
+{% block content %}
 <div class="content-wrapper">
     <section class="content-header">
+        <a href="{% url 'customer:ledger_debit' pk=customer.id %}"><button type="button" value="Create" class="btn btn-primary">Debit</button></a>
+        <a href="{% url 'customer:ledger_credit' pk=customer.id %}"><button type="button" value="Create" class="btn btn-primary">Credit</button></a>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Expenses</li>
+            <li><a href="#"> Customer</a></li>
+            <li class="active">Ledger</li>
         </ol>
     </section>
-    <br>
     <section class="content">
         <div class="row">
             <div class="col-lg-12">
                 <div class="box">
                     <div class="box-header">
-                        <h2 class="box-title">Expenses</h2>
+                        <h2 class="box-title">{{ customer.name|title }} | <small>Ledger Statement</small></h2>
                     </div>
                     <div class="box-body">
                         <div class="table-responsive">
                             <table class="table align-items-center table-striped table-bordered table-hover">
                                 <thead class="thead-dark">
                                 <tr>
-                                    <th>Amount</th>
-                                    <th>Description</th>
                                     <th>Date</th>
-                                    <th class="text-center">Action</th>
+                                    <th>Detail</th>
+                                    <th>Debit Amount</th>
+                                    <th>Credit Amount</th>
+                                    <th>Balance</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for expense in expense %}
+                                {% for ledger in object_list %}
                                 <tr>
-                                    {% load humanize %}
-                                    <td>{{expense.amount|floatformat:-2|intcomma}}</td>
-                                    <td>{{expense.description}}</td>
-                                    <td>{{expense.date}}</td>
-                                    <td class="text-center">
-                                        <a href="{% url 'expense:update' pk=expense.id %}"><button class="btn btn-primary btn-xs">Update</button></a>
-                                        <a href="{% url 'expense:delete' pk=expense.id %}"><button class="btn btn-danger btn-xs">Delete</button></a>
-                                    </td>
+                                    <td>{{ledger.date}}</td>
+                                    <td>{{ledger.details}}</td>
+                                    <td>{{ledger.debit_amount|floatformat:-2 }}</td>
+                                    <td>{{ledger.credit_amount|floatformat:-2 }}</td>
+                                    <td>10000</td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>

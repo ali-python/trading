@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from expense.forms import ExpenseFormView
 from expense.models import Expense
-from django.views.generic import ListView, FormView, DeleteView
+from django.views.generic import ListView, FormView, DeleteView, UpdateView
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 
@@ -29,6 +29,27 @@ class ExpenseList(ListView):
         expense = (
             Expense.objects.all()
         )
+        context.update({
+            'expense': expense
+        })
+        return context
+
+
+class UpdateExpense(UpdateView):
+    model = Expense
+    form_class = ExpenseFormView
+    template_name = 'expense/update_expense.html'
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(reverse('expense:list'))
+
+    def form_invalid(self, form):
+        return super(UpdateExpense, self).form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateExpense, self).get_context_data(**kwargs)
+        expense = Expense.objects.all()
         context.update({
             'expense': expense
         })

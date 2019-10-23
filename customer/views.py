@@ -4,8 +4,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
-from customer.models import Customer
-from customer.forms import CustomerForm
+from customer.models import Customer, CustomerLedger
+from customer.forms import CustomerForm, CustomerLedgerForm
 
 
 class AddCustomer(FormView):
@@ -51,6 +51,75 @@ class UpdateCustomer(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(UpdateCustomer, self).get_context_data(**kwargs)
         customer = Customer.objects.all()
+        context.update({
+            'customer': customer
+        })
+        return context
+
+
+class CustomerLedgerListView(ListView):
+    model = CustomerLedger
+    template_name = 'customer_ledger/ledger_list.html'
+    paginate_by = 100
+
+    def get_queryset(self):
+        queryset = self.model.objects.filter(
+            customer__id=self.kwargs.get('pk')).order_by('date')
+
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(
+            CustomerLedgerListView, self).get_context_data(**kwargs)
+
+        try:
+            customer = Customer.objects.get(id=self.kwargs.get('pk'))
+        except Customer.DoesNotExist:
+            raise Http404('Customer does not exits!')
+
+        context.update({
+            'customer': customer
+        })
+        return context
+
+
+class DebitCustomerLedgerFormView(FormView):
+    template_name = 'customer_ledger/debit.html'
+    form_class = CustomerLedgerForm
+
+    def form_valid(self, form):
+        obj = form.save()
+        return HttpResponseRedirect(
+            reverse('customer:ledger_list',
+                    kwargs={'pk': obj.customer.id}
+            )
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            DebitCustomerLedgerFormView, self).get_context_data(**kwargs)
+        try:
+            customer = Customer.objects.get(id=self.kwargs.get('pk'))
+        except Customer.DoesNotExist:
+            raise Http404('Customer does not exits!')
+
+        context.update({
+            'customer': customer
+        })
+        return context
+
+
+class CreditCustomerLedgerFormView(DebitCustomerLedgerFormView):
+    template_name = 'customer_ledger/credit.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            CreditCustomerLedgerFormView, self).get_context_data(**kwargs)
+        try:
+            customer = Customer.objects.get(id=self.kwargs.get('pk'))
+        except Customer.DoesNotExist:
+            raise Http404('Customer does not exits!')
+
         context.update({
             'customer': customer
         })

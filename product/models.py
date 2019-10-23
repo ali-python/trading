@@ -75,6 +75,8 @@ class StockIn(models.Model):
 class StockOut(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE,
                                 null=True, blank=True, related_name='stockout_product')
+    invoice = models.ForeignKey(
+        'sales.Invoice', related_name='invoice_stockout', blank=True, null=True, on_delete=models.CASCADE)
     stock_out_quantity = models.DecimalField(max_digits=65, decimal_places=2,
                                              default=0, null=True, blank=True)
     selling_price = models.DecimalField(max_digits=65, decimal_places=2, default=0,
@@ -85,3 +87,23 @@ class StockOut(models.Model):
 
     def __str__(self):
         return str(self.product)
+
+
+class PurchasedItem(models.Model):
+    item = models.ForeignKey(
+        Product, related_name='purchased_item', on_delete=models.CASCADE)
+    invoice = models.ForeignKey(
+        'sales.Invoice', related_name='invoice_purchased', on_delete=models.CASCADE)
+    quantity = models.DecimalField(
+        max_digits=65, decimal_places=2, default=1, blank=True, null=True
+    )
+    price = models.DecimalField(
+        max_digits=65, decimal_places=2, default=0, blank=True, null=True
+    )
+    purchase_amount = models.DecimalField(
+        max_digits=65, decimal_places=2, default=0, blank=True, null=True
+    )
+    date = models.DateField(default=timezone.now, blank=True, null=True)
+
+    def __str__(self):
+        return self.invoice.name or ''
