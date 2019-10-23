@@ -4,7 +4,7 @@ from sales.models import Invoice
 
 class InvoiceAdmin(admin.ModelAdmin):
     list_display = (
-        '__str__', 'invoice', 'total_quantity', 'sub_total', 'grand_total', 'date'
+        '__str__', 'customer', 'total_quantity', 'sub_total', 'grand_total', 'date'
     )
 
     @staticmethod

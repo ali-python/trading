@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <div class="content-wrapper">
+        <section class="content-header">
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Customers</li>
+            </ol>
+        </section>
+        <br>
+        <section class="content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="row" style="font-size: large">
+                                <div class="col-xs-12 col-md-12">
+                                    <div>
+                                        <h2 class="text-center">Invoice</h2>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+{#                                    <br>#}
+{#                                    <a href="{% url 'sales:create_invoice' %}"><button type="button" id="invoice" class="btn btn-primary"  id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Create Invoice</button></a>#}
+{#                                    <button type="button" class="btn btn-primary print-invoice-btn" onclick="PrintInvoice('print-invoice')" >Print Invoice</button>#}
+{#                                    <br><br><br>#}
+                                    <div class="content-panel print-invoice" id="print-invoice" style="padding: 5px">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-12">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="col-md-12 ">
+                                                            {% if invoice.customer %}
+                                                                <div class="pull-left">
+                                                                    <label><strong class="f-size">Customer Name:</strong></label> <span class="f-size">{{ invoice.customer.name|title }}</span>
+                                                                </div>
+                                                                <div class="pull-right">
+                                                                    <label><strong class="f-size">Customer CNIC:</strong></label> <span class="f-size">{{ invoice.customer.cnic|title }}</span>
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="col-md-12 pull-left">
+                                                            <label><strong class="f-size">Billed Date:</strong></label><span class="f-size" style="margin: 15px;">{{ invoice.date|date:"d-m-y" }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                        <tr class="item-row">
+                                                            <th >Item</th>
+                                                            <th >Quantity</th>
+                                                            <th >Total</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for item in  invoice.invoice_purchased.all %}
+                                                            <tr id="hiderow">
+                                                                <td >
+                                                                    {{ item.item.name|title}}
+                                                                </td>
+                                                                <td >
+                                                                    {{ item.quantity|floatformat:-2}}
+                                                                </td>
+                                                                <td >
+                                                                    {{ item.purchase_amount|floatformat:-2 }}
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        <tr><td colspan="4" style="color:white"></td></tr>
+                                                        <tr>
+                                                            <td><strong >Total Quantity: </strong><span id="totalQty" style="color: red; font-weight: bold;">{{ invoice.total_quantity }} </span> </td>
+                                                            <td class="text-right" ><strong >Grand Total</strong></td>
+                                                            <td><span id="grandTotal" style="color: red;">{{ invoice.grand_total|floatformat:-2 }}</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td class="text-right"><strong >Cash Payment</strong></td>
+                                                            <td><span id="cash_payment" >{{ invoice.cash_payment|floatformat:-2 }}</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td class="text-right"><strong >Returned Cash</strong></td>
+                                                            <td><span id="returned_cash"  >{{invoice.returned_payment|floatformat:-2 }}</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td class="text-right"><strong >Received Amount</strong></td>
+                                                            <td><span id="receivedAmount" >{{ invoice.paid_amount|floatformat:-2 }}</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td class="text-right" ><strong >Remaining Payment</strong></td>
+                                                            <td><span id="remainingAmount">{{ invoice.remaining_payment|floatformat:-2 }}</span></td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-12" style="text-align: center;">
+                                                <strong style="font-size:12px;color:#000">Thank You</strong>
+                                            </div>
+                                            <div class="col-xs-12 col-md-12" style="text-align: center;">
+                                                <strong class="f-size">
+                                                    Software Developed By Partum Solutions</strong>
+                                            </div>
+                                            <div class="col-lg-6 col-xs-12 text-center">
+                                                <span class="f-size">www.partumsolutions.com</span>
+                                            </div>
+                                            <div class="col-lg-6 col-xs-12 text-center">
+                                                <span class="f-size">ph:+92-332-8364441</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
