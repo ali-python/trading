@@ -337,14 +337,14 @@
                         </ul>
                     </li>                    <li class="treeview">
                         <a href="#">
-                            <i class="fa fa-comment"></i> <span>Agents</span>
+                            <i class="fa fa-university"></i> <span>Banking System</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="#"><i class="fa fa-circle-o"></i>Create</a></li>
-                            <li><a href="#"><i class="fa fa-circle-o"></i>List</a></li>
+                            <li><a href="{% url 'bank:add' %}"><i class="fa fa-circle-o"></i>Add bank</a></li>
+                            <li><a href="{% url 'bank:list' %}"><i class="fa fa-circle-o"></i>Bank List</a></li>
                         </ul>
                     </li>                    <li><a href="#"><i class="fa fa-circle-o"></i>Rent Properties</a></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i>Tenants</a></li>
