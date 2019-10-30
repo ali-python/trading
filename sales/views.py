@@ -1,12 +1,12 @@
 import json
-
+from django.core.paginator import Paginator
 from django.views.generic import ListView, TemplateView, View
 from django.http import JsonResponse
 from django.db.models import Sum
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.db import transaction
-
+from django.shortcuts import render
 from customer.models import Customer
 from product.models import Product
 from sales.models import Invoice
@@ -20,7 +20,27 @@ class InvoiceListView(ListView):
     template_name = 'sales/invoice_list.html'
     model = Invoice
     paginate_by = 100
-    ordering = '-id'
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if not queryset:
+            queryset = Invoice.objects.all().order_by('-id')
+
+        if self.request.GET.get('customer_name'):
+            queryset = queryset.filter(
+                customer__name__contains=self.request.GET.get('customer_name'))
+
+        if self.request.GET.get('customer_id'):
+            queryset = queryset.filter(
+                id=self.request.GET.get('customer_id').lstrip('0')
+            )
+
+        if self.request.GET.get('date'):
+            queryset = queryset.filter(
+                date=self.request.GET.get('date')
+            )
+
+        return queryset.order_by('-id')
 
 
 class CreateInvoiceTemplateView(TemplateView):

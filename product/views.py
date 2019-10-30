@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from product.forms import (
     ProductCategoryForm, ProductForm, StockInForm, StockOutForm
 )
@@ -69,16 +68,24 @@ class ProductList(ListView):
     model = Product
     template_name = 'product/product_list.html'
     paginate_by = 100
-    is_paginated = True
     ordering = '-id'
 
-    def get_context_data(self, **kwargs):
-        context = super(ProductList, self).get_context_data(**kwargs)
-        product = Product.objects.all()
-        context.update({
-            'products': product
-        })
-        return context
+    def get_queryset(self):
+        queryset = self.queryset
+        if not queryset:
+            queryset = Product.objects.all().order_by('-id')
+
+        if self.request.GET.get('product_name'):
+            queryset = queryset.filter(
+                name__contains=self.request.GET.get('product_name')
+            )
+
+        if self.request.GET.get('product_category'):
+            queryset = queryset.filter(
+                category__category__contains=self.request.GET.get('product_category')
+            )
+
+        return queryset.order_by('-id')
 
 
 class StockInProduct(FormView):
@@ -141,13 +148,13 @@ class StockInDetail(ListView):
     model = StockIn
     ordering = '-id'
 
-    def get_queryset(self):
-        queryset = self.queryset
-        if not queryset:
-            queryset = StockIn.objects.all()
-
-        queryset = queryset.filter(product=self.kwargs.get('pk'))
-        return queryset.order_by('-id')
+    # def get_queryset(self):
+    #     queryset = self.queryset
+    #     if not queryset:
+    #         queryset = StockIn.objects.all()
+    #
+    #     queryset = queryset.filter(product=self.kwargs.get('pk'))
+    #     return queryset.order_by('-id')
 
     def get_context_data(self, **kwargs):
         context = super(StockInDetail, self).get_context_data(**kwargs)
@@ -163,13 +170,13 @@ class StockOutDetail(ListView):
     model = StockOut
     ordering = '-id'
 
-    def get_queryset(self):
-        queryset = self.queryset
-        if not queryset:
-            queryset = StockOut.objects.all()
-
-        queryset = queryset.filter(product=self.kwargs.get('pk'))
-        return queryset.order_by('-id')
+    # def get_queryset(self):
+    #     queryset = self.queryset
+    #     if not queryset:
+    #         queryset = StockOut.objects.all()
+    #
+    #     queryset = queryset.filter(product=self.kwargs.get('pk'))
+    #     return queryset.order_by('-id')
 
     def get_context_data(self, **kwargs):
         context = super(StockOutDetail, self).get_context_data(**kwargs)

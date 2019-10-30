@@ -24,16 +24,23 @@ class CustomerList(ListView):
     model = Customer
     template_name = 'customer/customer_list.html'
     paginate_by = 100
-    is_paginated = True
     ordering = '-id'
 
-    def get_context_data(self, **kwargs):
-        context = super(CustomerList, self).get_context_data(**kwargs)
-        customer = Customer.objects.all()
-        context.update({
-            'customer': customer
-        })
-        return context
+    def get_queryset(self):
+        queryset = self.queryset
+        if not queryset:
+            queryset = Customer.objects.all().order_by('-id')
+
+        if self.request.GET.get('customer_name'):
+            queryset = queryset.filter(
+                name__icontains=self.request.GET.get('customer_name'))
+
+        if self.request.GET.get('customer_id'):
+            queryset = queryset.filter(
+                cnic=self.request.GET.get('customer_id').lstrip('0')
+            )
+
+        return queryset.order_by('-id')
 
 
 class UpdateCustomer(UpdateView):
@@ -62,9 +69,18 @@ class CustomerLedgerListView(ListView):
     template_name = 'customer_ledger/ledger_list.html'
     paginate_by = 100
 
-    def get_queryset(self):
-        queryset = self.model.objects.filter(
-            customer__id=self.kwargs.get('pk')).order_by('date')
+    def get_queryset(self, **kwargs):
+
+        queryset = self.queryset
+
+        if not queryset:
+            queryset = self.model.objects.filter(
+                customer__id=self.kwargs.get('pk')).order_by('-date')
+
+        if self.request.GET.get('date'):
+            queryset = queryset.filter(
+                date__icontains=self.request.GET.get('date')
+            )
 
         return queryset
 
