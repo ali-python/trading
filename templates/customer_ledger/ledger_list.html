@@ -3,7 +3,7 @@
 {% block content %}
 <div class="content-wrapper">
     <section class="content-header">
-{#        <a href="{% url 'customer:ledger_debit' pk=customer.id %}"><button type="button" value="Create" class="btn btn-primary">Debit</button></a>#}
+        <a href="{% url 'customer:ledger_debit' pk=customer.id %}"><button type="button" value="Create" class="btn btn-primary">Debit/Payment</button></a>
         <a href="{% url 'customer:ledger_credit' pk=customer.id %}"><button type="button" value="Create" class="btn btn-primary">Credit/Payment</button></a>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -16,7 +16,17 @@
             <div class="col-lg-12">
                 <div class="box">
                     <div class="box-header">
-                        <h2 class="box-title">{{ customer.name|title }} | <small>Ledger Statement</small></h2>
+                        <h3 class="text-center"><b>{{ customer.name|title }}</b> | <small>Ledger Statement</small></h3>
+                        <div class="col-lg-12">
+                            <div class="col-lg-6 pull-left">
+                                <input type="date" class="form-control date_search" placeholder="Search by Date ..." >
+                            </div>
+                            <div class="pull-right">
+                                <button class="form-control btn btn-primary search">Search</button>
+                            </div>
+                        <br><br>
+                        <hr>
+                        </div>
                     </div>
                     <div class="box-body">
                         <div class="table-responsive">
@@ -42,6 +52,14 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
+                            {% if paginator.page_range|length > 1 %}
+                            <div class="text-center col-lg-12">
+                                <ul class="pagination justify-content-center">
+                                    <li><a  style="background-color: #3070A8; color: white" class="page_previous" href="{% if page_obj.has_previous %}{% url 'customer:ledger_list' pk=customer.id %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}" title="Previous"><<</a></li>
+                                    <li><a style="background-color: #3070A8; color: white" class="page_next" href="{% if page_obj.has_next %}{% url 'customer:ledger_list' pk=customer.id %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}" title="Next">>></a></li>
+                                </ul>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -49,4 +67,16 @@
         </div>
     </section>
 </div>
+{% endblock %}
+
+{% block script %}
+    {{ block.super }}
+<script>
+$(function () {
+    $('.search').on('click', function () {
+        var url = '{% url "customer:ledger_list" pk=customer.id %}';
+        window.location.href  = url + '?' + 'date=' + $('.date_search').val();
+    });
+})
+</script>
 {% endblock %}
