@@ -1,6 +1,6 @@
 from django import forms
 from product.models import (
-    ProductCategory, Product, StockIn, StockOut
+    ProductCategory, Product, StockIn, StockOut, PurchasedItem
 )
 
 
@@ -25,4 +25,10 @@ class StockInForm(forms.ModelForm):
 class StockOutForm(forms.ModelForm):
     class Meta:
         model = StockOut
+        fields = '__all__'
+
+
+class PurchasedItemForm(forms.ModelForm):
+    class Meta:
+        model = PurchasedItem
         fields = '__all__'

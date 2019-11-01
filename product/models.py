@@ -106,4 +106,4 @@ class PurchasedItem(models.Model):
     date = models.DateField(default=timezone.now, blank=True, null=True)
 
     def __str__(self):
-        return self.invoice.name or ''
+        return self.item.name or ''

@@ -47,4 +47,4 @@ class Invoice(models.Model):
     date = models.DateField(default=timezone.now, blank=True, null=True)
 
     def __str__(self):
-        return self.customer.name
+        return str(self.id).zfill(7)

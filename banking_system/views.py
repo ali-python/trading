@@ -20,18 +20,34 @@ class AddBankFormView(FormView):
         return super(AddBankFormView, self).form_invalid(form)
 
 
-class AddBankListView(ListView):
+class BankListView(ListView):
     model = Bank
-    template_name = 'banking/add_bank_list.html'
+    template_name = 'banking/bank_list.html'
     paginate_by = 100
 
-    def get_context_data(self, **kwargs):
-        context = super(AddBankListView, self).get_context_data(**kwargs)
-        bank = Bank.objects.all()
-        context.update({
-            'bank': bank
-        })
-        return context
+    def get_queryset(self):
+        queryset = self.queryset
+        if not queryset:
+            queryset = Bank.objects.all().order_by('-id')
+
+        if self.request.GET.get('bank_name'):
+            queryset = queryset.filter(
+                name__contains=self.request.GET.get('bank_name'))
+
+        if self.request.GET.get('account_no'):
+            queryset = queryset.filter(
+                account_number=self.request.GET.get('account_no').lstrip('0')
+            )
+
+        return queryset.order_by('-id')
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(BankListView, self).get_context_data(**kwargs)
+    #     bank = Bank.objects.all()
+    #     context.update({
+    #         'bank': bank
+    #     })
+    #     return context
 
 
 class AddBankUpdateView(UpdateView):
@@ -59,6 +75,19 @@ class BankDetailListView(ListView):
     model = BankDetail
     template_name = 'banking/bank_detail_list.html'
     paginate_by = 100
+
+    def get_queryset(self, **kwargs):
+        queryset = self.queryset
+        if not queryset:
+            queryset = self.model.objects.filter(
+                bank__id=self.kwargs.get('pk')).order_by('-date')
+
+        if self.request.GET.get('date'):
+            queryset = queryset.filter(
+                date__icontains=self.request.GET.get('date')
+            )
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(BankDetailListView, self).get_context_data(**kwargs)
