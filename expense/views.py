@@ -22,17 +22,30 @@ class ExpenseList(ListView):
     template_name = 'expense/expense_list.html'
     model = Expense
     paginate_by = 100
-    is_paginated = True
+    ordering = '-id'
 
-    def get_context_data(self, **kwargs):
-        context = super(ExpenseList, self).get_context_data(**kwargs)
-        expense = (
-            Expense.objects.all()
-        )
-        context.update({
-            'expense': expense
-        })
-        return context
+    def get_queryset(self):
+        queryset = self.queryset
+
+        if not queryset:
+            queryset = Expense.objects.all().order_by('-id')
+
+        if self.request.GET.get('date'):
+            queryset = queryset.filter(
+                date__icontains=self.request.GET.get('date')
+            )
+
+        return queryset
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(ExpenseList, self).get_context_data(**kwargs)
+    #     expense = (
+    #         Expense.objects.all()
+    #     )
+    #     context.update({
+    #         'expense': expense
+    #     })
+    #     return context
 
 
 class UpdateExpense(UpdateView):

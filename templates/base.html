@@ -301,8 +301,8 @@
                         <li><a href="{% url 'product:list' %}"><i class="fa fa-circle-o"></i>List Products</a></li>
                     </ul>
                 </li>
-                    <li class="treeview">
-                        <a href="#">
+                <li class="treeview">
+                    <a href="#">
                         <i class="fa fa-files-o"></i> <span>Sales</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
@@ -312,24 +312,35 @@
                         <li><a href="#"><i class="fa fa-circle-o"></i>Create Invoice</a></li>
                         <li><a href="{% url 'sales:invoice_list' %}"><i class="fa fa-circle-o"></i>Invoice List</a></li>
                     </ul>
-                        <ul class="treeview-menu">
-                            <i class="fa fa-user"></i> <span>Customers</span>
-                            <li><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Create Customer</a></li>
-                            <li><a href="{% url 'customer:list' %}"><i class="fa fa-circle-o"></i>List</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-files-o"></i> <span>Expense System</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
+                    <ul class="treeview-menu">
+                        <li><a href="{% url 'sales:invoice_create' %}"><i class="fa fa-circle-o"></i> <span>Create Invoice</span></a></li>
+                        <li><a href="{% url 'sales:invoice_list' %}"><i class="fa fa-circle-o"></i>Invoices</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-files-o"></i> <span>Customer</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Customer Add</a></li>
+                        <li><a href="{% url 'customer:list' %}"><i class="fa fa-circle-o"></i>List</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-files-o"></i> <span>Expense System</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
                         <li><a href="{% url 'expense:add' %}"><i class="fa fa-paypal"></i> <span>Add Expense</span></a></li>
                         <li><a href="{% url 'expense:list' %}"><i class="fa fa-circle-o"></i>Expense List</a></li>
-                        </ul>
-                    </li>
+                    </ul>
+                </li>
             </ul>
         </section>
     </aside>
