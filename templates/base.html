@@ -288,48 +288,57 @@
             <!-- search form -->
 
             <ul class="sidebar-menu" data-widget="tree">
-
-                    <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-files-o"></i> <span>Product</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="{% url 'product:add_category' %}"><i class="fa fa-circle-o"></i>Add Category</a></li>
-                            <li><a href="{% url 'product:add' %}"><i class="fa fa-circle-o"></i>Add Product</a></li>
-                            <li><a href="{% url 'product:list' %}"><i class="fa fa-circle-o"></i>List Products</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-files-o"></i> <span>Sales</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
+                <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-files-o"></i> <span>Product</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{% url 'product:add_category' %}"><i class="fa fa-circle-o"></i>Add Category</a></li>
+                        <li><a href="{% url 'product:add' %}"><i class="fa fa-circle-o"></i>Add Product</a></li>
+                        <li><a href="{% url 'product:list' %}"><i class="fa fa-circle-o"></i>List Products</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-files-o"></i> <span>Sales</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
                         <li><a href="{% url 'sales:invoice_create' %}"><i class="fa fa-circle-o"></i> <span>Create Invoice</span></a></li>
                         <li><a href="{% url 'sales:invoice_list' %}"><i class="fa fa-circle-o"></i>Invoices</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-user"></i> <span>Customers</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Create Customer</a></li>
-                            <li><a href="{% url 'customer:list' %}"><i class="fa fa-circle-o"></i>List</a></li>
-                        </ul>
-                    </li>
-
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-user"></i> <span>Customers</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Create Customer</a></li>
+                        <li><a href="{% url 'customer:list' %}"><i class="fa fa-circle-o"></i>List</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-university"></i> <span>Banking System</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{% url 'bank:add' %}"><i class="fa fa-circle-o"></i>Add bank</a></li>
+                        <li><a href="{% url 'bank:list' %}"><i class="fa fa-circle-o"></i>Bank List</a></li>
+                    </ul>
+                </li>
             </ul>
-
         </section>
     </aside>
 

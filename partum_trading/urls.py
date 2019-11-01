@@ -24,6 +24,7 @@ urlpatterns = [
     path('product/', include(('product.urls', 'product'), namespace='product')),
     path('customer/', include(('customer.urls', 'customer'), namespace='customer')),
     path('sales/', include(('sales.urls', 'sales'), namespace='sales')),
+    path('bank_detail/', include(('banking_system.urls', 'bank'), namespace='bank')),
 
 ]
 
