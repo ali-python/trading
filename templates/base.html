@@ -309,29 +309,37 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="#"><i class="fa fa-circle-o"></i>Create Invoice</a></li>
-                        <li><a href="{% url 'sales:invoice_list' %}"><i class="fa fa-circle-o"></i>Invoice List</a></li>
-                    </ul>
-                    <ul class="treeview-menu">
                         <li><a href="{% url 'sales:invoice_create' %}"><i class="fa fa-circle-o"></i> <span>Create Invoice</span></a></li>
-                        <li><a href="{% url 'sales:invoice_list' %}"><i class="fa fa-circle-o"></i>Invoices</a></li>
+                        <li><a href="{% url 'sales:invoice_list' %}"><i class="fa fa-circle-o"></i>Invoices List</a></li>
                     </ul>
                 </li>
                 <li class="treeview">
                     <a href="#">
-                        <i class="fa fa-files-o"></i> <span>Customer</span>
+                        <i class="fa fa-user"></i> <span>Customers</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Customer Add</a></li>
+                        <li><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Create Customer</a></li>
                         <li><a href="{% url 'customer:list' %}"><i class="fa fa-circle-o"></i>List</a></li>
                     </ul>
                 </li>
                 <li class="treeview">
                     <a href="#">
-                        <i class="fa fa-files-o"></i> <span>Expense System</span>
+                        <i class="fa fa-university"></i> <span>Banking System</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{% url 'bank:add' %}"><i class="fa fa-circle-o"></i>Add bank</a></li>
+                        <li><a href="{% url 'bank:list' %}"><i class="fa fa-circle-o"></i>Bank List</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-university"></i> <span>Expense System</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
