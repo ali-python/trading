@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'customer',
     'common',
     'sales',
+    'expense',
     'banking_system',
 ]
 
