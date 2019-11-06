@@ -349,6 +349,21 @@
                         <li><a href="{% url 'expense:list' %}"><i class="fa fa-circle-o"></i>Expense List</a></li>
                     </ul>
                 </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-university"></i> <span>Logs</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{% url 'common:daily_logs' %}"><i class="fa fa-paypal"></i> <span>Daily Logs</span></a></li>
+                        <li><a href="{% url 'common:monthly_logs' %}"><i class="fa fa-circle-o"></i>Monthly Logs</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{% url 'common:reports' %}"><i class="fa fa-paypal"></i> <span>Monthly Reports</span></a>
+                </li>
             </ul>
         </section>
     </aside>
@@ -367,6 +382,8 @@
 </div>
 
 {% block script %}
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
     <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
     <script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'bower_components/fastclick/lib/fastclick.js' %}"></script>

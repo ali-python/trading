@@ -2,7 +2,7 @@ from django.urls import path
 from customer.views import (
     AddCustomer, CustomerList, UpdateCustomer,
     CustomerLedgerListView, DebitCustomerLedgerFormView,
-    CreditCustomerLedgerFormView
+    CreditCustomerLedgerFormView,
 )
 
 urlpatterns = [
