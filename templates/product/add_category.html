@@ -4,31 +4,30 @@
 
 <div class="content-wrapper">
     <section class="content-header">
-
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Add Category</li>
         </ol>
     </section>
     <br>
     <section class="content">
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-md-6 pull-left">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Add Category</h3>
+                        <h4 class="text-center"><b>Add Category</b></h4>
                     </div>
                     <div class="box-body">
                         <form action="{% url 'product:add_category' %}" method="post" autocomplete="off">
                             {% csrf_token %}
                             <div class="row">
-                                <div class="col-lg-12 form-group">
+                                <div class="col-md-12 pull-left form-group">
                                     <label class="form-control-label">Category <span style="color:red">*</span></label>
-                                    <input type="text" name="category" class="form-control form-control-alternative" placeholder="Add Category" >
+                                    <input type="text" name="category" class="form-control form-control-alternative" placeholder="Add Category" required>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-6 form-group">
+                                <div class="col-md-4 pull-right form-group">
                                     <label class="form-control-label"></label>
                                     <button type="submit" value="Create" class="btn btn-primary form-control">Save</button>
                                 </div>

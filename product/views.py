@@ -146,20 +146,33 @@ class StockInDetail(ListView):
     template_name = 'product/stockin_detail.html'
     paginate_by = 100
     model = StockIn
-    ordering = '-id'
 
-    # def get_queryset(self):
-    #     queryset = self.queryset
-    #     if not queryset:
-    #         queryset = StockIn.objects.all()
-    #
-    #     queryset = queryset.filter(product=self.kwargs.get('pk'))
-    #     return queryset.order_by('-id')
+    def get_queryset(self, **kwargs):
 
-    def get_context_data(self, **kwargs):
-        context = super(StockInDetail, self).get_context_data(**kwargs)
+        queryset = self.queryset
+
+        if not queryset:
+            queryset = self.model.objects.filter(
+                product__id=self.kwargs.get('pk')).order_by('-date')
+
+        if self.request.GET.get('date'):
+            queryset = queryset.filter(
+                dated_order__icontains=self.request.GET.get('date')
+            )
+
+        return queryset.order_by('-id')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(
+            StockInDetail, self).get_context_data(**kwargs)
+
+        try:
+            product = Product.objects.get(id=self.kwargs.get('pk'))
+        except Product.DoesNotExist:
+            raise Http404('Product does not exits!')
+
         context.update({
-            'product': Product.objects.get(id=self.kwargs.get('pk'))
+            'product': product
         })
         return context
 
@@ -168,19 +181,32 @@ class StockOutDetail(ListView):
     template_name = 'product/stockout_detail.html'
     paginate_by = 100
     model = StockOut
-    ordering = '-id'
 
-    # def get_queryset(self):
-    #     queryset = self.queryset
-    #     if not queryset:
-    #         queryset = StockOut.objects.all()
-    #
-    #     queryset = queryset.filter(product=self.kwargs.get('pk'))
-    #     return queryset.order_by('-id')
+    def get_queryset(self, **kwargs):
 
-    def get_context_data(self, **kwargs):
-        context = super(StockOutDetail, self).get_context_data(**kwargs)
+        queryset = self.queryset
+
+        if not queryset:
+            queryset = self.model.objects.filter(
+                product__id=self.kwargs.get('pk')).order_by('-date')
+
+        if self.request.GET.get('date'):
+            queryset = queryset.filter(
+                date__icontains=self.request.GET.get('date')
+            )
+
+        return queryset.order_by('-id')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(
+            StockOutDetail, self).get_context_data(**kwargs)
+
+        try:
+            product = Product.objects.get(id=self.kwargs.get('pk'))
+        except Product.DoesNotExist:
+            raise Http404('Product does not exits!')
+
         context.update({
-            'product': Product.objects.get(id=self.kwargs.get('pk'))
+            'product': product
         })
         return context

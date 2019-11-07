@@ -1,33 +1,34 @@
 {% extends 'base.html' %}
-
 {% block content %}
 <div class="content-wrapper">
     <section class="content-header">
+        <a href="{% url 'bank:debit' pk=bank.id %}"><button type="button" value="Create" class="btn btn-success">Debit</button></a>
+        <a href="{% url 'bank:credit' pk=bank.id %}"><button type="button" value="Create" class="btn btn-danger">Credit</button></a>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Banking System</a></li>
-            <li class="active">Bank Detail List</li>
+            <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="{% url 'bank:list' %}"> Bank List</a></li>
+            <li class="active">Bank Detail</li>
         </ol>
     </section>
     <section class="content">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="text-center"><b>Bank Detail List {{bank.name}}</b></h3>
-                        <div class="col-lg-12">
-                            <div class="col-lg-6 pull-left">
+                        <h3 class="text-center"><b>{{bank.name}}|</b> <small><b>Bank Detail List</b></small></h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4 pull-left">
                                 <input type="date" class="form-control date_search" placeholder="Search by Date ..." >
                             </div>
-                            <div class="pull-right">
+                            <div class="col-md-2 pull-right">
                                 <button class="form-control btn btn-primary search">Search</button>
                             </div>
                         <br><br>
                         <hr>
                         </div>
                     </div>
-                    <a href="{% url 'bank:debit' pk=bank.id %}"><button type="button" value="Create" class="btn btn-primary">Debit</button></a>
-                    <a href="{% url 'bank:credit' pk=bank.id %}"><button type="button" value="Create" class="btn btn-primary">Credit</button></a>
                     <div class="box-body">
                         <div class="table-responsive">
                             <table class="table align-items-center table-striped table-bordered table-hover">
@@ -43,14 +44,15 @@
                                 <tbody>
                                 {% for bank in object_list %}
                                 <tr>
+                                    {% load humanize %}
                                     <td>{{bank.date}}</td>
                                     <td>{{bank.description}}</td>
-                                    <td>{{bank.debit}}</td>
-                                    <td>{{bank.credit}}</td>
+                                    <td>{{bank.debit|floatformat:-2|intcomma}}</td>
+                                    <td>{{bank.credit|floatformat:-2|intcomma}}</td>
                                     </td>
                                     <td class="text-center">
                                         <a href="{% url 'bank:debit_update' pk=bank.id %}"><button class="btn btn-primary btn-xs">Debit Update</button></a>
-                                        <a href="{% url 'bank:credit_update' pk=bank.id %}"><button class="btn btn-primary btn-xs">Credit Update</button></a>
+                                        <a href="{% url 'bank:credit_update' pk=bank.id %}"><button class="btn btn-info btn-xs">Credit Update</button></a>
                                     </td>
                                 </tr>
                                 {% endfor %}

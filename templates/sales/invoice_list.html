@@ -5,37 +5,35 @@
     <div class="content-wrapper">
     <section class="content-header">
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
-            <li><a href="#">Invoices</a></li>
-            <li class="active">Create</li>
+            <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i>Home</a></li>
+            <li class="active">Invoice List</li>
         </ol>
     </section>
     <br>
     <section class="content">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h2 class="text-center "><b>Invoice List</b></h2>
-                        <div class="col-lg-12">
-                            <div class="col-lg-6 pull-left">
+                        <h3 class="text-center "><b>Invoice List</b></h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-3 pull-left">
                                 <input type="text" class="form-control name_search" placeholder="Search by Name ..." >
                             </div>
-                            <div class="col-lg-6 pull-left">
-                                <input type="text" class="form-control id_search" placeholder="Search by Receipt No ...">
+                            <div class="col-md-3">
+                                <input type="text" class="form-control id_search" placeholder="Search by Invoice No ...">
                             </div>
-                            <div class="col-lg-6 pull-left">
+                            <div class="col-md-3">
                                 <input type="date" class="form-control date_search" placeholder="Search by Date ...">
                             </div>
-                            <div class="pull-right">
+                            <div class="col-md-2 pull-right">
                                 <button class="form-control btn btn-primary search">Search</button>
                             </div>
                         </div>
-                        <br><br>
-                        <hr>
-                        <hr>
-
                     </div>
+                    <hr>
                     <div class="box-body">
                         <div class="table-responsive">
                             <table class="table align-items-center table-striped table-bordered table-hover">
@@ -56,12 +54,13 @@
                                 {% endif %}
                                 {% for invoice in object_list %}
                                     <tr>
+                                        {% load humanize %}
                                         <td>{{ invoice.date }}</td>
                                         <td>{{ invoice.id|stringformat:"04d" }}</td>
                                         <td>{{ invoice.customer.name|title }}</td>
-                                        <td>{{ invoice.total_quantity|floatformat:-2 }}</td>
-                                        <td>{{ invoice.sub_total|floatformat:-2 }}</td>
-                                        <td>{{ invoice.grand_total|floatformat:-2 }}</td>
+                                        <td>{{ invoice.total_quantity|floatformat:-2|intcomma }}</td>
+                                        <td>{{ invoice.sub_total|floatformat:-2|intcomma }}</td>
+                                        <td>{{ invoice.grand_total|floatformat:-2|intcomma }}</td>
                                         <td class="text-center">
                                             <a href="#"><button class="btn btn-primary btn-xs">Update</button></a>
                                             <a href="{% url 'sales:invoice_detail' pk=invoice.id %}"><button class="btn btn-info btn-xs">View</button></a>
