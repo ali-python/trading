@@ -4,43 +4,40 @@
 
 <div class="content-wrapper">
     <section class="content-header">
-
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">Bank System</a></li>
+            <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="{% url 'bank:detail_list' pk=object.bank.id %}">Bank Detail</a></li>
             <li class="active">Update Debit</li>
         </ol>
     </section>
-
-    <!-- Main content -->
+    <br>
     <section class="content">
-        <!-- Info boxes -->
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-6 pull-left">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Update Debit</h3>
+                        <h3 class="text-center"><b>Update Debit</b></h3>
                     </div>
                     <div class="box-body">
                         <form action="" method="post" autocomplete="off">
                             {% csrf_token %}
                             <input type="hidden" name="bank" value="{{object.bank.id}}">
                             <div class="row">
-                                <div class="col-lg-6 form-group">
+                                <div class="col-md-12 pull-left form-group">
                                     <label class="form-control-label">Debit Amount <span style="color:red">*</span></label>
-                                    <input type="text" name="debit" class="form-control form-control-alternative" placeholder="Debit Amount" value="{{ object.debit }}">
+                                    <input type="text" name="debit" class="form-control form-control-alternative" placeholder="Debit Amount" value="{{ object.debit }}" required>
                                 </div>
-                                <div class="col-lg-6 form-group">
+                                <div class="col-md-12 pull-left form-group">
                                     <label class="form-control-label">Date <span style="color:red">*</span></label>
-                                    <input type="date" name="date" class="form-control form-control-alternative" placeholder="Date" onfocus="(this.type='date')" onblur="(this.type='text')">
+                                    <input type="date" name="date" class="form-control form-control-alternative" placeholder="Date" onfocus="(this.type='date')" onblur="(this.type='text')" required>
                                 </div>
-                                <div class="col-lg-6 form-group">
+                                <div class="col-md-12 pull-left form-group">
                                     <label class="form-control-label">Details <span style="color:red">*</span></label>
-                                    <input type="text" name="description" class="form-control form-control-alternative" placeholder="Details" value="{{ object.description }}">
+                                    <input type="text" name="description" class="form-control form-control-alternative" placeholder="Details" value="{{ object.description }}" required>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-2 form-group">
+                                <div class="col-md-4 pull-right form-group">
                                     <label class="form-control-label"></label>
                                     <button type="submit" value="Create" class="btn btn-primary form-control">Save</button>
                                 </div>

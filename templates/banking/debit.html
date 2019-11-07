@@ -4,39 +4,41 @@
 <div class="content-wrapper">
     <section class="content-header">
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">Bank System</a></li>
-            <li class="active">Debit</li>
+            <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="{% url 'bank:detail_list' pk=bank.id %}">Bank Detail</a></li>
+            <li class="active">Add Debit</li>
         </ol>
     </section>
     <br>
     <section class="content">
-        <!-- Info boxes -->
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-6 pull-left">
                 <div class="box">
+                    <div class="box-header">
+                        <h3 class="text-center"><b>{{ bank.name|title }} |</b> <small><b>Add Debit Amount</b></small></h3>
+                    </div>
                     <div class="box-body">
-                        <form action="#" method="post" autocomplete="off">
+                        <form action="{% url 'bank:debit' pk=bank.id %}" method="post" autocomplete="off">
                             {% csrf_token %}
                             <div class="row">
                                 <input type="hidden" name="bank" value="{{bank.id}}">
-                                <div class="col-lg-6 form-group">
+                                <div class="col-md-12 pull-left form-group">
                                     <label class="form-control-label">Debit Amount <span style="color:red">*</span></label>
                                     <input type="text" name="debit" class="form-control form-control-alternative" placeholder="Debit Amount" required>
                                 </div>
-                                <div class="col-lg-6 form-group">
+                                <div class="col-md-12 pull-left form-group">
                                     <label class="form-control-label">Date <span style="color:red">*</span></label>
                                     <input type="date" name="date" class="form-control" required>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-12 form-group">
+                                <div class="col-md-12 pull-left form-group">
                                     <label class="form-control-label">Details <span style="color:red">*</span></label>
                                     <textarea type="text" name="description" class="form-control form-control-alternative" placeholder="Details" required></textarea>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-2 form-group">
+                                <div class="col-md-4 pull-right form-group">
                                     <label class="form-control-label"></label>
                                     <button type="submit" value="Create" class="btn btn-primary form-control">Save</button>
                                 </div>

@@ -3,12 +3,14 @@
 {% block content %}
     <div class="content-wrapper">
         <section class="content-header">
+            <a class="col-md-2 pull-left" href="{% url 'sales:invoice_create' %}"><button type="button" id="invoice" class="btn btn-primary"  id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Create Invoice</button></a>
+            <button type="button" class="btn btn-primary print-invoice-btn" onclick="PrintInvoice('print-invoice')" >Print Invoice</button>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Customers</li>
+                <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="{% url 'sales:invoice_list' %}">Invoice List</a></li>
+                <li class="active">Invoice View</li>
             </ol>
         </section>
-        <br>
         <section class="content">
             <div class="row">
                 <div class="col-lg-12">
@@ -21,10 +23,6 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12">
-                                      <br>
-                                      <a href="{% url 'sales:invoice_create' %}"><button type="button" id="invoice" class="btn btn-primary"  id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Create Invoice</button></a>
-                                      <button type="button" class="btn btn-primary print-invoice-btn" onclick="PrintInvoice('print-invoice')" >Print Invoice</button>
-                                      <br>
                                     <div class="content-panel print-invoice" id="print-invoice" style="padding: 5px">
                                         <div class="row">
                                             <div class="col-xs-12 col-md-12">
@@ -32,22 +30,26 @@
                                                     <div class="col-xs-12">
                                                         <div class="col-md-12 ">
                                                             {% if invoice.customer %}
-                                                                <div class="pull-left">
+                                                                <div class="col-ls-6 pull-left">
                                                                     <label><strong class="f-size">Customer Name:</strong></label> <span class="f-size">{{ invoice.customer.name|title }}</span>
                                                                 </div>
-                                                                <div class="pull-right">
+                                                                <div class="c0l-ls-6 pull-right">
                                                                     <label><strong class="f-size">Customer CNIC:</strong></label> <span class="f-size">{{ invoice.customer.cnic|title }}</span>
                                                                 </div>
                                                             {% endif %}
                                                         </div>
-                                                        <div class="col-md-6 pull-left">
-                                                            <label><strong class="f-size">Mobile No:</strong></label> <span class="f-size">{{ invoice.customer.mobile|title }}</span>
+                                                        <div class="col-md-12 ">
+                                                            <div class="col-ls-6 pull-left">
+                                                                <label><strong class="f-size">Mobile No:</strong></label> <span class="f-size">{{ invoice.customer.mobile|title }}</span>
+                                                            </div>
+                                                            <div class="col-ls-6 pull-right">
+                                                                <label><strong class="f-size">Receipt No:</strong></label> <span class="f-size">{{ invoice.id|stringformat:"04d"|title }}</span>
+                                                            </div>
                                                         </div>
-                                                        <div class="pull-right">
-                                                            <label><strong class="f-size">Receipt No:</strong></label> <span class="f-size">{{ invoice.id|stringformat:"04d"|title }}</span>
-                                                        </div>
-                                                        <div class="col-md-6 pull-left">
-                                                            <label><strong class="f-size">Billed Date:</strong></label><span class="f-size" style="margin: 15px;">{{ invoice.date|date:"d-m-y" }}</span>
+                                                        <div class="col-md-12 ">
+                                                            <div class="col-ls-6 pull-left">
+                                                                <label><strong class="f-size">Billed Date:</strong></label><span class="f-size" style="margin: 15px;">{{ invoice.date|date:"d-m-y" }}</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

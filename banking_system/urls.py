@@ -1,12 +1,7 @@
 from django.urls import path
 from banking_system.views import (
-    AddBankFormView, BankListView,
-    BankDetailListView,
-    AddBankUpdateView,
-    CreditBankFormView,
-    CreditBankUpdateView,
-    DebitBankFormView,
-    DebitBankUpdateView
+    AddBankFormView, BankListView, BankDetailListView, AddBankUpdateView,
+    CreditBankFormView, CreditBankUpdateView, DebitBankFormView, DebitBankUpdateView
 )
 
 urlpatterns = [
