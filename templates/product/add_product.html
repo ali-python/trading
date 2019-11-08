@@ -6,7 +6,7 @@
     <section class="content-header">
         <ol class="breadcrumb">
             <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="{% url 'product:add_category' %}">Product</a></li>
+            <li><a href="{% url 'product:add_category' %}">Product Category</a></li>
             <li class="active">Add Product</li>
         </ol>
     </section>
@@ -35,27 +35,7 @@
                                     {% endfor %}
                                     </select>
                                 </div>
-                                <div class="col-md-4 pull-left form-group">
-                                    <label class="form-control-label">Litre <span style="color:red">*</span></label>
-                                    <input type="text" name="litre" class="form-control form-control-alternative" placeholder="Litre" required>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 pull-left form-group">
-                                    <label class="form-control-label">Quantity <span style="color:red">*</span></label>
-                                    <input type="text" name="quantity" class="form-control form-control-alternative" placeholder="Quantity" required>
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label class="form-control-label">Uint Price <span style="color:red">*</span></label>
-                                    <input type="text" name="unit_price" class="form-control form-control-alternative" placeholder="Uint Price" required>
-                                </div>
-                                <div class="col-md-4 pull-right form-group">
-                                    <label class="form-control-label">Amount <span style="color:red">*</span></label>
-                                    <input type="text" name="amount" class="form-control form-control-alternative" placeholder="Amount" required>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 pull-left form-group">
+                                 <div class="col-md-4 form-group">
                                     <label class="form-control-label">Date <span style="color:red">*</span></label>
                                     <input type="date" name="date" class="form-control form-control-alternative" placeholder="Date" onfocus="(this.type='date')" onblur="(this.type='text')" required>
                                 </div>

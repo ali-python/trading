@@ -15,6 +15,13 @@ class AddProductCategory(FormView):
     form_class = ProductCategoryForm
     template_name = 'product/add_category.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            AddProductCategory, self).dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         form.save()
         return HttpResponseRedirect(reverse('product:add'))
@@ -26,6 +33,13 @@ class AddProductCategory(FormView):
 class AddProduct(FormView):
     form_class = ProductForm
     template_name = 'product/add_product.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            AddProduct, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.save()
@@ -47,6 +61,13 @@ class UpdateProduct(UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'product/update_product.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            UpdateProduct, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.save()
@@ -70,6 +91,13 @@ class ProductList(ListView):
     paginate_by = 100
     ordering = '-id'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            ProductList, self).dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
         queryset = self.queryset
         if not queryset:
@@ -91,6 +119,13 @@ class ProductList(ListView):
 class StockInProduct(FormView):
     form_class = StockInForm
     template_name = 'product/add_stock_item.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            StockInProduct, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         obj = form.save()
@@ -117,6 +152,13 @@ class StockInProduct(FormView):
 class StockOutProduct(FormView):
     form_class = StockOutForm
     template_name = 'product/stock_out_item.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            StockOutProduct, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         obj = form.save()
@@ -146,6 +188,13 @@ class StockInDetail(ListView):
     template_name = 'product/stockin_detail.html'
     paginate_by = 100
     model = StockIn
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            StockInDetail, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self, **kwargs):
 
@@ -181,6 +230,13 @@ class StockOutDetail(ListView):
     template_name = 'product/stockout_detail.html'
     paginate_by = 100
     model = StockOut
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            StockOutDetail, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self, **kwargs):
 

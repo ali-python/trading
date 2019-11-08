@@ -290,7 +290,7 @@
                 <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                 <li class="treeview">
                     <a href="#">
-                        <i class="fa fa-files-o"></i> <span>Product</span>
+                        <i class="fa fa-product-hunt"></i> <span>Product</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -303,7 +303,7 @@
                 </li>
                 <li class="treeview">
                     <a href="#">
-                        <i class="fa fa-files-o"></i> <span>Sales</span>
+                        <i class="fa fa-shopping-cart"></i> <span>Sales</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -339,7 +339,7 @@
                 </li>
                 <li class="treeview">
                     <a href="#">
-                        <i class="fa fa-university"></i> <span>Expense System</span>
+                        <i class="fa fa-money"></i> <span>Expense System</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -351,18 +351,21 @@
                 </li>
                 <li class="treeview">
                     <a href="#">
-                        <i class="fa fa-university"></i> <span>Logs</span>
+                        <i class="fa fa-history"></i> <span>Logs</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{% url 'common:daily_logs' %}"><i class="fa fa-paypal"></i> <span>Daily Logs</span></a></li>
+                        <li><a href="{% url 'common:daily_logs' %}"><i class="fa fa-circle-o"></i> <span>Daily Logs</span></a></li>
                         <li><a href="{% url 'common:monthly_logs' %}"><i class="fa fa-circle-o"></i>Monthly Logs</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="{% url 'common:reports' %}"><i class="fa fa-paypal"></i> <span>Monthly Reports</span></a>
+                    <a href="{% url 'common:reports' %}"><i class="fa fa-copy"></i> <span>Monthly Reports</span></a>
+                </li>
+                 <li>
+                    <a href="{% url 'common:logout' %}"><i class="fa fa-sign-out"></i> <span>Logout</span></a>
                 </li>
             </ul>
         </section>
