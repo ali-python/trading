@@ -10,7 +10,8 @@ from django.shortcuts import render
 from customer.models import Customer
 from product.models import Product
 from sales.models import Invoice
-
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from customer.forms import CustomerForm, CustomerLedgerForm
 from product.forms import ProductForm, StockOutForm, PurchasedItemForm
 from sales.forms import InvoiceForm
@@ -20,6 +21,13 @@ class InvoiceListView(ListView):
     template_name = 'sales/invoice_list.html'
     model = Invoice
     paginate_by = 100
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            InvoiceListView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = self.queryset
@@ -46,6 +54,13 @@ class InvoiceListView(ListView):
 class CreateInvoiceTemplateView(TemplateView):
     template_name = 'sales/create_invoice.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            CreateInvoiceTemplateView, self).dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(CreateInvoiceTemplateView, self).get_context_data(**kwargs)
         context.update({
@@ -57,6 +72,14 @@ class CreateInvoiceTemplateView(TemplateView):
 
 
 class ProductListAPIView(View):
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            ProductListAPIView, self).dispatch(request, *args, **kwargs)
+
     def get(self, request, *args, **kwargs):
         products = Product.objects.all()
         items = []
@@ -109,6 +132,13 @@ class ProductListAPIView(View):
 
 
 class GenerateInvoiceAPIView(View):
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            GenerateInvoiceAPIView, self).dispatch(request, *args, **kwargs)
 
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
@@ -218,6 +248,13 @@ class GenerateInvoiceAPIView(View):
 
 class InvoiceDetailTemplateView(TemplateView):
     template_name = 'sales/invoice_detail.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            InvoiceDetailTemplateView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(InvoiceDetailTemplateView, self).get_context_data(**kwargs)

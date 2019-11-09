@@ -12,6 +12,13 @@ class AddBankFormView(FormView):
     form_class = BankForm
     template_name = 'banking/add_bank.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            AddBankFormView, self).dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         form.save()
         return HttpResponseRedirect(reverse('bank:list'))
@@ -24,6 +31,13 @@ class BankListView(ListView):
     model = Bank
     template_name = 'banking/bank_list.html'
     paginate_by = 100
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            BankListView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = self.queryset
@@ -55,6 +69,13 @@ class AddBankUpdateView(UpdateView):
     form_class = BankForm
     template_name = 'banking/update_add_bank_list.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            AddBankUpdateView, self).dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         form.save()
         return HttpResponseRedirect(reverse('bank:list'))
@@ -75,6 +96,13 @@ class BankDetailListView(ListView):
     model = BankDetail
     template_name = 'banking/bank_detail_list.html'
     paginate_by = 100
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            BankDetailListView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self, **kwargs):
         queryset = self.queryset
@@ -107,6 +135,13 @@ class DebitBankFormView(FormView):
     template_name = 'banking/debit.html'
     form_class = BankDetailForm
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            DebitBankFormView, self).dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         obj = form.save()
         return HttpResponseRedirect(reverse('bank:detail_list',
@@ -136,6 +171,13 @@ class DebitBankUpdateView(UpdateView):
     form_class = BankDetailForm
     template_name = 'banking/update_debit.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            DebitBankUpdateView, self).dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         obj = form.save()
         return HttpResponseRedirect(reverse('bank:detail_list',
@@ -150,6 +192,20 @@ class DebitBankUpdateView(UpdateView):
 class CreditBankFormView(DebitBankFormView):
     template_name = 'banking/credit.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            CreditBankFormView, self).dispatch(request, *args, **kwargs)
+
 
 class CreditBankUpdateView(DebitBankUpdateView):
     template_name = 'banking/update_credit.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            CreditBankUpdateView, self).dispatch(request, *args, **kwargs)

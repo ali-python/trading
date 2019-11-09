@@ -1,18 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load staticfiles %}
-
 <div class="content-wrapper">
     <section class="content-header">
-        <a class="col-md-2 pull-left" href="{% url 'customer:ledger_debit' pk=customer.id %}"><button type="button" value="Create" class="btn btn-primary">Debit/Payment</button></a>
-        <a class="col-md-2" href="{% url 'customer:ledger_credit' pk=customer.id %}"><button type="button" value="Create" class="btn btn-primary">Credit/Payment</button></a>
+        <a href="{% url 'customer:ledger_debit' pk=customer.id %}"><button type="button" value="Create" class="btn btn-success">Debit/Payment</button></a>
+        <a href="{% url 'customer:ledger_credit' pk=customer.id %}"><button type="button" value="Create" class="btn btn-danger">Credit/Payment</button></a>
         <ol class="breadcrumb">
             <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> Home</a></li>
             <li><a href="{% url 'customer:list' %}"> Customer List</a></li>
             <li class="active">Ledger</li>
         </ol>
     </section>
-    <br>
     <section class="content">
         <div class="row">
             <div class="col-md-12">

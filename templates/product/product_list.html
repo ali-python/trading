@@ -40,10 +40,8 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Category</th>
-                                    <th>Litre</th>
-                                    <th>Quantity</th>
-                                    <th>Unit Price</th>
-                                    <th>Amount</th>
+                                    <th>Total Quantity</th>
+                                    <th>Available Item</th>
                                     <th>Date</th>
                                     <th class="text-center">Action</th>
                                 </tr>
@@ -54,10 +52,8 @@
                                     {% load humanize %}
                                     <td>{{product.name|title}}</td>
                                     <td>{{product.category|title}}</td>
-                                    <td>{{product.litre|floatformat:-2}}</td>
-                                    <td>{{product.quantity|floatformat:-2}}</td>
-                                    <td>{{product.unit_price|floatformat:-2|intcomma}}</td>
-                                    <td>{{product.amount|floatformat:-2|intcomma}}</td>
+                                    <td>{{product.total_items|floatformat:-2}}</td>
+                                    <td>{{product.product_available_items|floatformat:-2}}</td>
                                     <td>{{product.date}}</td>
                                     <td class="text-center">
                                         <a href="{% url 'product:update' pk=product.id %}"><button class="btn btn-primary btn-xs">Update</button></a>

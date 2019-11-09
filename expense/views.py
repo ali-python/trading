@@ -10,6 +10,13 @@ class AddExpense(FormView):
     form_class = ExpenseFormView
     template_name = 'expense/add_expense.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            AddExpense, self).dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         form.save()
         return HttpResponseRedirect(reverse('expense:list'))
@@ -23,6 +30,13 @@ class ExpenseList(ListView):
     model = Expense
     paginate_by = 100
     ordering = '-id'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            ExpenseList, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = self.queryset
@@ -53,6 +67,13 @@ class UpdateExpense(UpdateView):
     form_class = ExpenseFormView
     template_name = 'expense/update_expense.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            UpdateExpense, self).dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         form.save()
         return HttpResponseRedirect(reverse('expense:list'))
@@ -73,6 +94,13 @@ class DeleteExpense(DeleteView):
     model = Expense
     success_url = reverse_lazy('expense:list')
     success_message = ''
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            DeleteExpense, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
