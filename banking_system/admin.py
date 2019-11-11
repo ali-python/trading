@@ -10,9 +10,8 @@ class BankAdmin(admin.ModelAdmin):
 
 class BankDetailAdmin(admin.ModelAdmin):
     list_display = (
-        'debit', 'credit', 'amount', 'description', 'date'
+        '__str__', 'debit', 'credit', 'invoice', 'description', 'date'
     )
-
 
 
 admin.site.register(Bank, BankAdmin)

@@ -35,9 +35,10 @@
                                 <thead class="thead-dark">
                                 <tr>
                                     <th>Date</th>
-                                    <th>Detail</th>
+                                    <th>Invoice</th>
                                     <th>Debit Amount</th>
                                     <th>Credit Amount</th>
+                                    <th>Detail</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                                 </thead>
@@ -46,6 +47,7 @@
                                 <tr>
                                     {% load humanize %}
                                     <td>{{bank.date}}</td>
+                                    <td>{{bank.invoice|stringformat:"04d"}}</td>
                                     <td>{{bank.description}}</td>
                                     <td>{{bank.debit|floatformat:-2|intcomma}}</td>
                                     <td>{{bank.credit|floatformat:-2|intcomma}}</td>

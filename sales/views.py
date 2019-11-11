@@ -15,6 +15,8 @@ from django.urls import reverse
 from customer.forms import CustomerForm, CustomerLedgerForm
 from product.forms import ProductForm, StockOutForm, PurchasedItemForm
 from sales.forms import InvoiceForm
+from banking_system.models import Bank
+from banking_system.forms import BankDetailForm
 
 
 class InvoiceListView(ListView):
@@ -67,6 +69,7 @@ class CreateInvoiceTemplateView(TemplateView):
             'customers': Customer.objects.all().order_by('name'),
             'products': Product.objects.all().order_by('name'),
             'today_date': timezone.now().date(),
+            'banks': Bank.objects.all().order_by('name')
         })
         return context
 
@@ -157,12 +160,9 @@ class GenerateInvoiceAPIView(View):
         paid_amount = self.request.POST.get('paid_amount')
         cash_payment = self.request.POST.get('cash_payment')
         returned_cash = self.request.POST.get('returned_cash')
+        payment_type = self.request.POST.get('payment_type')
+        bank = self.request.POST.get('bank')
         items = json.loads(self.request.POST.get('items'))
-
-        print(items)
-        print(remaining_payment)
-        print(grand_total)
-        print(customer_name)
 
         with transaction.atomic():
             invoice_form_kwargs = {
@@ -174,6 +174,7 @@ class GenerateInvoiceAPIView(View):
                 'remaining_payment': remaining_payment,
                 'cash_payment': cash_payment,
                 'returned_payment': returned_cash,
+                'payment_type': payment_type,
             }
             invoice_form = InvoiceForm(invoice_form_kwargs)
             invoice = invoice_form.save()
@@ -240,8 +241,19 @@ class GenerateInvoiceAPIView(View):
                     }
 
                     customer_ledger = CustomerLedgerForm(ledger_form_kwargs)
-                    print(customer_ledger.errors)
                     customer_ledger.save()
+
+            if payment_type == 'Check':
+                bank_details_kwargs = {
+                    'bank': bank,
+                    'invoice': invoice.id,
+                    'credit': paid_amount,
+                    'description': 'Invoice %s' % invoice.id
+                }
+                bank_details_form = BankDetailForm(bank_details_kwargs)
+                bank_details = bank_details_form.save()
+                invoice.bank = bank_details.bank
+                invoice.save()
 
         return JsonResponse({'invoice_id': invoice.id})
 

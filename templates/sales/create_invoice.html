@@ -76,7 +76,34 @@
                                             </div>
                                         </div>
                                         <div class="col-xs-6 col-md-6">
-                                            <div class="form-group"><strong>Billed To:</strong> <span>{{today_date|date:'d-m-y'}}</span></div>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-xs-6 col-md-6">
+                                                        <strong>Billed To:</strong> <span>{{today_date|date:'d-m-y'}}</span>
+                                                    </div>
+                                                    <div class="col-xs-6 col-md-6">
+                                                        <select class="form-control payment_type" name="payment_type" id="payment_type">
+                                                            <option value="Cash">Cash</option>
+                                                            <option value="Check">Check</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="bank-wrapper" style="display: none">
+                                                        <div class="col-xs-6 col-md-6">
+                                                            <br>
+                                                            Select a Bank for Deposit Check:
+                                                        </div>
+                                                        <div class="col-xs-6 col-md-6">
+                                                            <br>
+                                                            <select class="form-control bank" name="bank" id="bank">
+                                                                {% for bank in banks %}
+                                                                    <option value="{{ bank.id }}">{{ bank.name|title }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
                                             <div class="existing-customer">
                                                 <span class="customererror" style="color: red; display: none">Customer Doesn't exist please add Customer</span>
                                                 <input class="form-control customer" id="customer-id" placeholder="Customer" list="customer-list" >
@@ -287,6 +314,8 @@
                 var customer_name = $('.customer_name').val();
                 var customer_phone = $('.customer_phone').val();
                 var customer_cnic = $('.customer_cnic').val();
+                var payment_type = $('.payment_type').val();
+                var bank = $('.bank').val();
                 var items = [];
                 var total_quantity = 0;
                 for (var i=1; i<$('.item-row').length; i+=1) {
@@ -332,6 +361,8 @@
                         paid_amount: paid_amount,
                         cash_payment: cash_payment,
                         returned_cash: returned_cash,
+                        payment_type: payment_type,
+                        bank: bank,
                         items: JSON.stringify(items)
                     }, function (result, status) {
                         {#window.location.href = '/sales/invoice/'+ result.invoice_id +/detail/;#}
@@ -354,6 +385,14 @@
                 $('.new-customer-form').hide();
                 $('.customer_name').val('');
                 $('.customer_phone').val('');
+            });
+
+            $('.payment_type').on('change', function () {
+                if ($(this).val() == 'Cash') {
+                    $('.bank-wrapper').hide();
+                } else {
+                    $('.bank-wrapper').show();
+                }
             });
 
         });
