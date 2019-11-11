@@ -50,7 +50,7 @@
                                     <td>{{customer.name|title}}</td>
                                     <td>{{customer.cnic}}</td>
                                     <td>{{customer.mobile}}</td>
-                                    <td>0</td>
+                                    <td>{{ customer.get_unpaid_amount|floatformat:-2 }}</td>
                                     <td class="text-center">
                                         <a href="{% url 'customer:update' pk=customer.id %}"><button class="btn btn-primary btn-xs">Update</button></a>
                                         <a href="{% url 'customer:ledger_list' pk=customer.id %}"><button class="btn btn-info btn-xs">Ledger</button></a>
