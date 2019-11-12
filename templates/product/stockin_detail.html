@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
+{% block product %}active{% endblock %}
+{% block product_list %}active{% endblock %}
 {% block content %}
+{% load staticfiles %}
+
 <div class="content-wrapper">
     <section class="content-header">
         <a class="col-md-2 pull-left" href="{%url 'product:add_stock' pk=product.id %}"><button type="button" class="btn btn-primary btn-sm">Add Stock In</button></a>

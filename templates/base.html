@@ -92,7 +92,7 @@
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">Main Navigation</li>
                 <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                <li class="treeview">
+                <li class="treeview {% block product %}{% endblock %}">
                     <a href="#">
                         <i class="fa fa-product-hunt"></i> <span>Product</span>
                         <span class="pull-right-container">
@@ -100,12 +100,12 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{% url 'product:add_category' %}"><i class="fa fa-circle-o"></i>Add Category</a></li>
-                        <li><a href="{% url 'product:add' %}"><i class="fa fa-circle-o"></i>Add Product</a></li>
-                        <li><a href="{% url 'product:list' %}"><i class="fa fa-circle-o"></i>List Products</a></li>
+                        <li class="{% block add_category %}{% endblock %}"><a href="{% url 'product:add_category' %}"><i class="fa fa-circle-o"></i>Add Category</a></li>
+                        <li class="{% block add_product %}{% endblock %}"><a href="{% url 'product:add' %}"><i class="fa fa-circle-o"></i>Add Product</a></li>
+                        <li class="{% block product_list %}{% endblock %}"><a href="{% url 'product:list' %}"><i class="fa fa-circle-o"></i>List Products</a></li>
                     </ul>
                 </li>
-                <li class="treeview">
+                <li class="treeview {% block customer %}{% endblock %}">
                     <a href="#">
                         <i class="fa fa-user"></i> <span>Customers</span>
                         <span class="pull-right-container">
@@ -113,11 +113,11 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Add Customer</a></li>
-                        <li><a href="{% url 'customer:list' %}"><i class="fa fa-circle-o"></i>Customer List</a></li>
+                        <li class="{% block customer_create %}{% endblock %}"><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Add Customer</a></li>
+                        <li class="{% block customer_list %}{% endblock %}"><a href="{% url 'customer:list' %}"><i class="fa fa-circle-o"></i>Customer List</a></li>
                     </ul>
                 </li>
-                <li class="treeview">
+                <li class="treeview {% block bank %}{% endblock %}">
                     <a href="#">
                         <i class="fa fa-university"></i> <span>Banking System</span>
                         <span class="pull-right-container">
@@ -125,12 +125,12 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{% url 'bank:add' %}"><i class="fa fa-circle-o"></i>Add Bank</a></li>
-                        <li><a href="{% url 'bank:list' %}"><i class="fa fa-circle-o"></i>Bank List</a></li>
+                        <li class="{% block add_bank %}{% endblock %}"><a href="{% url 'bank:add' %}"><i class="fa fa-circle-o"></i>Add Bank</a></li>
+                        <li class="{% block bank_list %}{% endblock %}"><a href="{% url 'bank:list' %}"><i class="fa fa-circle-o"></i>Bank List</a></li>
                     </ul>
                 </li>
                 <li class="header">Sales & Expenses</li>
-                <li class="treeview">
+                <li class="treeview {% block expense %}{% endblock %}">
                     <a href="#">
                         <i class="fa fa-money"></i> <span>Expense System</span>
                         <span class="pull-right-container">
@@ -138,11 +138,11 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{% url 'expense:add' %}"><i class="fa fa-circle-o"></i> <span>Add Expense</span></a></li>
-                        <li><a href="{% url 'expense:list' %}"><i class="fa fa-circle-o"></i>Expense List</a></li>
+                        <li class="{% block add_expense %}{% endblock %}"><a href="{% url 'expense:add' %}"><i class="fa fa-circle-o"></i> <span>Add Expense</span></a></li>
+                        <li class="{% block expense_list %}{% endblock %}"><a href="{% url 'expense:list' %}"><i class="fa fa-circle-o"></i>Expense List</a></li>
                     </ul>
                 </li>
-                <li class="treeview">
+                <li class="treeview {% block sales %}{% endblock %}">
                     <a href="#">
                         <i class="fa fa-shopping-cart"></i> <span>Sales</span>
                         <span class="pull-right-container">
@@ -150,13 +150,12 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{% url 'sales:invoice_create' %}"><i class="fa fa-circle-o"></i> <span>Create Invoice</span></a></li>
-                        <li><a href="{% url 'sales:invoice_list' %}"><i class="fa fa-circle-o"></i>Invoices List</a></li>
+                        <li class="{% block create_invoice %}{% endblock %}"><a href="{% url 'sales:invoice_create' %}"><i class="fa fa-circle-o"></i> <span>Create Invoice</span></a></li>
+                        <li class="{% block invoice_list %}{% endblock %}"><a href="{% url 'sales:invoice_list' %}"><i class="fa fa-circle-o"></i>Invoices List</a></li>
                     </ul>
                 </li>
-
                 <li class="header">Logs & Reports</li>
-                <li class="treeview">
+                <li class="treeview {% block stock_logs %}{% endblock %}">
                     <a href="#">
                         <i class="fa fa-history"></i> <span>Stock Logs</span>
                         <span class="pull-right-container">
@@ -164,14 +163,21 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{% url 'common:daily_logs' %}"><i class="fa fa-circle-o"></i> <span>Daily Logs</span></a></li>
-                        <li><a href="{% url 'common:monthly_logs' %}"><i class="fa fa-circle-o"></i>Monthly Logs</a></li>
+                        <li class="{% block daily_stock_logs %}{% endblock %}"><a href="{% url 'common:daily_logs' %}"><i class="fa fa-circle-o"></i> <span>Daily Logs</span></a></li>
+                        <li class="{% block monthly_stock_logs %}{% endblock %}"><a href="{% url 'common:monthly_logs' %}"><i class="fa fa-circle-o"></i>Monthly Logs</a></li>
                     </ul>
                 </li>
-                <li>
-                    <a href="{% url 'common:reports' %}"><i class="fa fa-copy"></i> <span>Monthly Reports</span></a>
+                <li class="treeview {% block reports %}{% endblock %}">
+                    <a href="#">
+                        <i class="fa fa-copy"></i> <span>Reports</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{% block monthly_reports %}{% endblock %}"><a href="{% url 'common:reports' %}"><i class="fa fa-circle-o"></i> <span>Monthly Reports</span></a></li>
+                    </ul>
                 </li>
-
                 <li class="header">User</li>
                  <li>
                     <a href="{% url 'common:logout' %}"><i class="fa fa-sign-out"></i> <span>Logout</span></a>

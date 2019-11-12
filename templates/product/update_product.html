@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% block product %}active{% endblock %}
+{% block product_list %}active{% endblock %}
 {% block content %}
 {% load staticfiles %}
 
@@ -44,7 +46,7 @@
 
                             </div>
                             <div class="row">
-                                <div class="col-md-2 pull-right form-group">
+                                <div class="col-md-4 pull-right form-group">
                                     <label class="form-control-label"></label>
                                     <button type="submit" value="Create" class="btn btn-primary form-control">Save</button>
                                 </div>
