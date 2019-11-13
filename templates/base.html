@@ -1,4 +1,5 @@
 {% load static %}
+{% load template_tags %}
 <html>
 <head>
     <meta charset="utf-8">
@@ -41,42 +42,25 @@
                     <li class="dropdown notifications-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             Notifications <i class="fa fa-bell-o"></i>
-                            <span class="label label-warning">10</span>
+                            <span class="label label-danger notification_count">10</span>
                         </a>
+                        {% get_products as p_n %}
                         <ul class="dropdown-menu">
-                            <li class="header">You have 10 notifications</li>
-                            <li>
-                                <!-- inner menu: contains the actual data -->
-                                <ul class="menu">
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
-                                            page and may cause design problems
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-users text-red"></i> 5 new members joined
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-shopping-cart text-green"></i> 25 sales made
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-user text-red"></i> You changed your username
-                                        </a>
-                                    </li>
-                                </ul>
+                            <li class="header">Lower Quantity Notifications</li>
+
+                            <li class="header">
+                                <table class="table table-bordered table-hover">
+                                    {% for p in p_n %}
+                                        {% if p.product_available_items <= p.notify_qty %}
+                                            <tr>
+                                                <th><strong>{{ p.name|title }}</strong></th>
+                                                <td style="color:red">{{ p.product_available_items|floatformat:-2 }}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </table>
                             </li>
-                            <li class="footer"><a href="#">View all</a></li>
+                            <li class="footer"><a href="{% url 'product:list' %}">View all</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -211,6 +195,17 @@
     <script src="{% static 'bower_components/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
     <script src="{% static 'bower_components/chart.js/Chart.js' %}"></script>
     <script src="{% static 'dist/js/demo.js' %}"></script>
+
+    <script>
+        var notification_count = 0;
+        {% for p in p_n %}
+            {% if p.product_available_items <= p.notify_qty %}
+                    notification_count += 1;
+            {% endif %}
+        {% endfor %}
+
+        $('.notification_count').text(notification_count);
+    </script>
 
 {% endblock %}
 </body>

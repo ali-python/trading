@@ -42,6 +42,7 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Category</th>
+                                    <th>Notify Quantity</th>
                                     <th>Total Quantity</th>
                                     <th>Available Item</th>
                                     <th>Date</th>
@@ -54,6 +55,7 @@
                                     {% load humanize %}
                                     <td>{{product.name|title}}</td>
                                     <td>{{product.category|title}}</td>
+                                    <td>{{product.notify_qty|floatformat:-2}}</td>
                                     <td>{{product.total_items|floatformat:-2}}</td>
                                     <td>{{product.product_available_items|floatformat:-2}}</td>
                                     <td>{{product.date}}</td>

@@ -10,7 +10,7 @@ class ProductCategoryAdmin(admin.ModelAdmin):
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
-        '__str__', 'name', 'category', 'litre', 'quantity', 'unit_price', 'amount', 'date'
+        '__str__', 'name', 'category', 'litre', 'quantity', 'unit_price', 'notify_qty', 'date'
     )
 
     @staticmethod

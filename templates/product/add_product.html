@@ -37,7 +37,11 @@
                                     {% endfor %}
                                     </select>
                                 </div>
-                                 <div class="col-md-12 form-group">
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Notify Quantity <span style="color:red">*</span></label>
+                                    <input type="number" name="notify_qty" class="form-control form-control-alternative" placeholder="Notify Quantity" required>
+                                </div>
+                                <div class="col-md-12 form-group">
                                     <label class="form-control-label">Date <span style="color:red">*</span></label>
                                     <input type="date" name="date" class="form-control form-control-alternative" placeholder="Date" onfocus="(this.type='date')" onblur="(this.type='text')" required>
                                 </div>

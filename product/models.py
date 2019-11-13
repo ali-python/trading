@@ -23,6 +23,10 @@ class Product(models.Model):
                                      null=True, blank=True)
     amount = models.DecimalField(max_digits=65, decimal_places=2, default=0,
                                  null=True, blank=True)
+    notify_qty = models.DecimalField(
+        max_digits=65, decimal_places=2, default=0,
+        null=True, blank=True
+    )
     date = models.DateField(default=timezone.now, null=True, blank=True)
 
     def __str__(self):
