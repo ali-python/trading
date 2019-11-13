@@ -91,7 +91,6 @@
             <!-- search form -->
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">Main Navigation</li>
-                <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                 <li class="treeview {% block product %}{% endblock %}">
                     <a href="#">
                         <i class="fa fa-product-hunt"></i> <span>Product</span>
@@ -211,7 +210,6 @@
     <script src="{% static 'plugins/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
     <script src="{% static 'bower_components/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
     <script src="{% static 'bower_components/chart.js/Chart.js' %}"></script>
-    <script src="{% static 'dist/js/pages/dashboard2.js' %}"></script>
     <script src="{% static 'dist/js/demo.js' %}"></script>
 
 {% endblock %}

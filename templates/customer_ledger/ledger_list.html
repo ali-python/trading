@@ -41,7 +41,6 @@
                                     <th>Detail</th>
                                     <th><small>Debit/Ledger Amount</small></th>
                                     <th><small>Credit/Payment Amount</small></th>
-                                    <th>Balance</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -52,7 +51,6 @@
                                     <td>{{ledger.details}}</td>
                                     <td>{{ledger.debit_amount|floatformat:-2|intcomma }}</td>
                                     <td>{{ledger.credit_amount|floatformat:-2|intcomma }}</td>
-                                    <td>10000</td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>

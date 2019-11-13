@@ -26,7 +26,7 @@ class LoginView(FormView):
     def form_valid(self, form):
         user = form.get_user()
         auth_login(self.request, user)
-        return HttpResponseRedirect(reverse('common:index'))
+        return HttpResponseRedirect(reverse('product:list'))
 
     def form_invalid(self, form):
         return super(LoginView, self).form_invalid(form)
@@ -81,7 +81,6 @@ class MonthlyReports(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(MonthlyReports, self).get_context_data(**kwargs)
         data_result = []
-        last_total = 0
         for month in range(60):
             data = {}
             date_month = timezone.now() - relativedelta(months=month)
@@ -146,7 +145,7 @@ class MonthlyReports(TemplateView):
                'total_cash_payment': total_cash_payment,
                'total_quantity': total_quantity,
                'total_customer': total_customer,
-               'date': start_month.strftime('%B, %Y')
+               'date': start_month.strftime('%b-%y')
             })
             data_result.append(data)
 

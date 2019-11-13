@@ -18,49 +18,44 @@
                 <div class="col-lg-12">
                     <div class="box">
                         <div class="box-body">
-                            <div class="row" style="font-size: large">
-                                <div class="col-xs-12 col-md-12">
-                                    <div>
-                                        <h2 class="text-center">Invoice</h2>
-                                    </div>
+                            <div class="row print-invoice" id="print-invoice">
+                                <div class="col-lg-12 text-center">
+                                    <h1 ><strong>Balochistan Oil Traders</strong></h1>
+                                    <h4>(Balochistan Distributors)</h4>
+                                    <span><strong>Address: </strong>Killi Gul Mohammad, Airport Road, Quetta</span> <br>
+                                    <small class="f-size"><strong>Phone No:</strong> 081-2301661 </small><small class="f-size"><strong>Mobile No: </strong> 0300-8382771, 0301-8383629</small>
+                                    <hr>
+                                    <u><h2>Invoice</h2></u>
                                 </div>
-                                <div class="col-lg-12 col-md-12 col-sm-12">
-                                    <div class="content-panel print-invoice" id="print-invoice" style="padding: 5px">
+                                <div class="col-lg-12">
+                                    <div class="content-panel" style="padding: 5px">
                                         <div class="row">
-                                            <div class="col-xs-12 col-md-12">
-                                                <div class="row">
-                                                    <div class="col-xs-12">
-                                                        <div class="col-md-12 ">
-                                                            {% if invoice.customer %}
-                                                                <div class="col-ls-6 pull-left">
-                                                                    <label><strong class="f-size">Customer Name:</strong></label> <span class="f-size">{{ invoice.customer.name|title }}</span>
-                                                                </div>
-                                                                <div class="c0l-ls-6 pull-right">
-                                                                    <label><strong class="f-size">Customer CNIC:</strong></label> <span class="f-size">{{ invoice.customer.cnic|title }}</span>
-                                                                </div>
-                                                            {% endif %}
-                                                        </div>
-                                                        <div class="col-md-12 ">
-                                                            <div class="col-ls-6 pull-left">
-                                                                <label><strong class="f-size">Mobile No:</strong></label> <span class="f-size">{{ invoice.customer.mobile|title }}</span>
-                                                            </div>
-                                                            <div class="col-ls-6 pull-right">
-                                                                <label><strong class="f-size">Payment Type:</strong></label> <span class="f-size">{{ invoice.payment_type }}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-12 ">
-                                                            <div class="col-ls-6 pull-left">
-                                                                <label><strong class="f-size">Billed Date:</strong></label><span class="f-size" style="margin: 15px;">{{ invoice.date|date:"d-m-y" }}</span>
-                                                            </div>
-                                                            <div class="col-ls-6 pull-right">
-                                                                <label><strong class="f-size">Receipt No:</strong></label> <span class="f-size">{{ invoice.id|stringformat:"04d"|title }}</span>
-                                                            </div>
-                                                        </div>
+                                            <div class="col-lg-6">
+                                                {% if invoice.customer %}
+                                                    <div class="col-lg-12">
+                                                        <label><strong class="f-size">Customer Name:</strong></label> <span class="f-size">{{ invoice.customer.name|title }}</span>
                                                     </div>
+                                                    <div class="col-lg-12">
+                                                        <label><strong class="f-size">Mobile No:</strong></label> <span class="f-size">{{ invoice.customer.mobile|title }}</span>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <label><strong class="f-size">Customer CNIC:</strong></label> <span class="f-size">{{ invoice.customer.cnic|title }}</span>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-lg-6 text-right">
+                                                <div class="col-lg-12">
+                                                    <label><strong class="f-size">Billed Date:</strong></label><span class="f-size">{{ invoice.date|date:"d-m-y" }}</span>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <label><strong class="f-size">Payment Type:</strong></label> <span class="f-size">{{ invoice.payment_type }}</span>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <label><strong class="f-size">Receipt No:</strong></label> <span class="f-size">{{ invoice.id|stringformat:"07d"|title }}</span>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <br>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="table-responsive">
