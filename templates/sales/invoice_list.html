@@ -58,7 +58,7 @@
                                     <tr>
                                         {% load humanize %}
                                         <td>{{ invoice.date }}</td>
-                                        <td>{{ invoice.id|stringformat:"04d" }}</td>
+                                        <td>{{ invoice.id|stringformat:"07d" }}</td>
                                         <td>{{ invoice.customer.name|title }}</td>
                                         <td>{{ invoice.payment_type }}</td>
                                         <td>{{ invoice.total_quantity|floatformat:-2|intcomma }}</td>

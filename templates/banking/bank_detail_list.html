@@ -39,10 +39,9 @@
                                 <tr>
                                     <th>Date</th>
                                     <th>Invoice</th>
+                                    <th>Details</th>
                                     <th>Debit Amount</th>
                                     <th>Credit Amount</th>
-                                    <th>Detail</th>
-                                    <th class="text-center">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -50,15 +49,10 @@
                                 <tr>
                                     {% load humanize %}
                                     <td>{{bank.date}}</td>
-                                    <td>{{bank.invoice|stringformat:"04d"}}</td>
+                                    <td>{{bank.invoice.id|stringformat:"07d"}}</td>
                                     <td>{{bank.description}}</td>
                                     <td>{{bank.debit|floatformat:-2|intcomma}}</td>
                                     <td>{{bank.credit|floatformat:-2|intcomma}}</td>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="{% url 'bank:debit_update' pk=bank.id %}"><button class="btn btn-primary btn-xs">Debit Update</button></a>
-                                        <a href="{% url 'bank:credit_update' pk=bank.id %}"><button class="btn btn-info btn-xs">Credit Update</button></a>
-                                    </td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>

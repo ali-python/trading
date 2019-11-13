@@ -248,7 +248,7 @@ class GenerateInvoiceAPIView(View):
                     'bank': bank,
                     'invoice': invoice.id,
                     'credit': paid_amount,
-                    'description': 'Invoice %s' % invoice.id
+                    'description': 'Invoice Payment is by Check/Bank.'
                 }
                 bank_details_form = BankDetailForm(bank_details_kwargs)
                 bank_details = bank_details_form.save()

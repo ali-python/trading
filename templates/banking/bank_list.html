@@ -41,6 +41,7 @@
                                     <th>Bank Name</th>
                                     <th>Bank Branch</th>
                                     <th>Account number</th>
+                                    <th>Balance</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                                 </thead>
@@ -50,6 +51,7 @@
                                     <td>{{bank.name|title}}</td>
                                     <td>{{bank.branch|title}}</td>
                                     <td>{{bank.account_number}}</td>
+                                    <td>{{ bank.bank_balance|floatformat:-2 }}</td>
                                     <td class="text-center">
                                         <a href="{% url 'bank:update' pk=bank.id %}"><button class="btn btn-primary btn-xs">Update</button></a>
                                         <a href="{% url 'bank:detail_list' pk=bank.id %}"><button class="btn btn-success btn-xs">Details</button></a>

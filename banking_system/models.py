@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.utils import timezone
 
 
@@ -9,6 +10,21 @@ class Bank(models.Model):
 
     def __str__(self):
         return self.name
+
+    def bank_balance(self):
+        bank_details = self.bank_detail.all()
+        if bank_details:
+            debit = bank_details.aggregate(Sum('debit'))
+            credit = bank_details.aggregate(Sum('credit'))
+
+            debit_amount = debit.get('debit__sum')
+            credit_amount = credit.get('credit__sum')
+        else:
+            debit_amount = 0
+            credit_amount = 0
+
+        balance = credit_amount - debit_amount
+        return balance
 
 
 class BankDetail(models.Model):
