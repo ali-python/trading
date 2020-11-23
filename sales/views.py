@@ -1,6 +1,7 @@
 import json
 from django.core.paginator import Paginator
-from django.views.generic import ListView, TemplateView, View
+from django.views.generic import (
+    ListView, TemplateView, View, FormView, DeleteView)
 from django.http import JsonResponse
 from django.db.models import Sum
 from django.utils import timezone
@@ -9,12 +10,12 @@ from django.db import transaction
 from django.shortcuts import render
 from customer.models import Customer
 from product.models import Product
-from sales.models import Invoice
+from sales.models import Invoice, InvoiceInstallment
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from customer.forms import CustomerForm, CustomerLedgerForm
 from product.forms import ProductForm, StockOutForm, PurchasedItemForm
-from sales.forms import InvoiceForm
+from sales.forms import InvoiceForm, InvoiceInstallmentForm
 from banking_system.models import Bank
 from banking_system.forms import BankDetailForm
 
@@ -228,7 +229,18 @@ class GenerateInvoiceAPIView(View):
                 purchase_item.save()
 
             if customer_id or self.request.POST.get('customer_id'):
-                if float(remaining_payment):
+                if payment_type == 'Installment':
+                    installment_kwargs = {
+                        'invoice': invoice.id,
+                        'paid_amount': paid_amount,
+                        'description': 'Advance Payment'
+
+                    }
+                    installment__form = InvoiceInstallmentForm(
+                        installment_kwargs)
+                    installment__form.save()
+
+                elif float(remaining_payment):
 
                     ledger_form_kwargs = {
                         'customer': customer_id,
@@ -275,3 +287,98 @@ class InvoiceDetailTemplateView(TemplateView):
             'invoice': invoice
         })
         return context
+
+
+class InvoiceInstallmentListView(ListView):
+    model = InvoiceInstallment
+    template_name = 'sales/installment_list.html'
+    paginate_by = 100
+    ordering = '-date'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            InvoiceInstallmentListView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = InvoiceInstallment.objects.filter(
+            invoice=self.kwargs.get('invoice_id'))
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(
+            InvoiceInstallmentListView, self).get_context_data(**kwargs)
+
+        invoice = Invoice.objects.get(id=self.kwargs.get('invoice_id'))
+        invoice_installments = InvoiceInstallment.objects.filter(
+            invoice__id=invoice.id)
+
+
+        grand_total = invoice.grand_total
+
+        if invoice_installments.exists():
+            total_paid_amount = invoice_installments.aggregate(
+                Sum('paid_amount'))
+            total_paid_amount = float(
+                total_paid_amount.get('paid_amount__sum') or 0
+            )
+
+        else:
+            total_paid_amount = 0
+
+        context.update({
+            'invoice_id': self.kwargs.get('invoice_id'),
+            'total_paid_amount': total_paid_amount,
+            'remaining_amount': float(grand_total) - total_paid_amount
+        })
+        return context
+
+
+class InvoiceInstallmentFormView(FormView):
+    form_class = InvoiceInstallmentForm
+    template_name = 'sales/installment_add.html'
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(
+            reverse('sales:installment_list',
+                    kwargs={'invoice_id': self.kwargs.get('invoice_id')}))
+
+    def form_invalid(self, form):
+        return super(InvoiceInstallmentFormView, self).form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            InvoiceInstallmentFormView, self).get_context_data(**kwargs)
+        context.update({
+            'invoice': Invoice.objects.get(id=self.kwargs.get('invoice_id'))
+        })
+        return context
+
+
+class InvoiceInstallmentDeleteView(DeleteView):
+    model = InvoiceInstallment
+    success_message = ''
+
+    def __init__(self, *args, **kwargs):
+        super(InvoiceInstallmentDeleteView, self).__init__(*args, **kwargs)
+        self.invoice_id = None
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        installment = InvoiceInstallment.objects.get(id=self.kwargs.get('pk'))
+        self.invoice_id = installment.invoice.id
+
+        return super(
+            InvoiceInstallmentDeleteView, self).dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse(
+            'sales:installment_list', kwargs={'invoice_id': self.invoice_id})
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)

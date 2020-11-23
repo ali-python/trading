@@ -65,8 +65,12 @@
                                         <td>{{ invoice.sub_total|floatformat:-2|intcomma }}</td>
                                         <td>{{ invoice.grand_total|floatformat:-2|intcomma }}</td>
                                         <td class="text-center">
-                                            <a href="#"><button class="btn btn-primary btn-xs">Update</button></a>
-                                            <a href="{% url 'sales:invoice_detail' pk=invoice.id %}"><button class="btn btn-info btn-xs">View</button></a>
+                                            <a href="{% url 'sales:invoice_detail' pk=invoice.id %}"><button class="btn btn-primary btn-xs">View</button></a>
+                                            {% if invoice.invoice_installment.all.exists %}
+                                                <a href="{% url 'sales:installment_list' invoice_id=invoice.id %}"><button class="btn btn-warning btn-xs">Installments</button></a>
+                                            {% else %}
+                                                <button class="btn default btn-xs">Not Available</button>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}

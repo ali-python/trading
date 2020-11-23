@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block sales %}active{% endblock %}
+{% block invoice_list %}active{% endblock %}
+{% block content %}
+
+    <div class="content-wrapper">
+    <section class="content-header">
+        <a href="{% url 'sales:invoice_detail' pk=invoice_id %}"><button type="button" id="invoice" class="btn btn-primary" >View Invoice</button></a>
+        <a href="{% url 'sales:installment_add' invoice_id=invoice_id %}"><button type="button" id="invoice" class="btn btn-primary">Add Installment</button></a>
+        <ol class="breadcrumb">
+            <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i>Home</a></li>
+            <li><a href="{% url 'sales:invoice_list' %}">View Invoice</a></li>
+            <li class="active">Installments</li>
+        </ol>
+    </section>
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="text-center "><b>Installments</b></h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <div class="text-right">
+                                Total Installment Paid: <strong>{{ total_paid_amount|floatformat:-2 }}</strong><br>
+                                Remaining Installments: <strong>{{ remaining_amount|floatformat:-2 }}</strong><br>
+                            </div>
+                            <table class="table align-items-center table-striped table-bordered table-hover">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Invoice</th>
+                                        <th>Customer</th>
+                                        <th>Paid Amount</th>
+                                        <th>Description</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% if not object_list %}
+                                    <tr><td colspan="7" class="text-center">No Installment Found!</td></tr>
+                                {% endif %}
+                                {% for installment in object_list %}
+                                    <tr>
+                                        {% load humanize %}
+                                        <td>{{ installment.date }}</td>
+                                        <td>{{ installment.invoice.id|stringformat:"07d" }}</td>
+                                        <td>{{ installment.invoice.customer.name|title }}</td>
+                                        <td>{{ installment.paid_amount|floatformat:-2|intcomma }}</td>
+                                        <td>{{ installment.description }}</td>
+                                        <td class="text-center">
+                                            <a href="{% url 'sales:installment_delete' pk=installment.id %}"><button class="btn btn-danger btn-xs">Delete</button></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {% if paginator.page_range|length > 1 %}
+                                <div class="text-center">
+                                    <ul class="pagination">
+                                        <li><a  style="background-color: #3070A8; color: white" class="page_previous" href="{% if page_obj.has_previous %}{% url 'sales:invoice_list' %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}" title="Previous"><<</a></li>
+                                        <li><a style="background-color: #3070A8; color: white" class="page_next" href="{% if page_obj.has_next %}{% url 'sales:invoice_list' %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}" title="Next">>></a></li>
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

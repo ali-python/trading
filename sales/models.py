@@ -5,10 +5,12 @@ from django.utils import timezone
 class Invoice(models.Model):
 
     PAYMENT_CASH = 'Cash'
+    PAYMENT_INSTALLMENT = 'Installment'
     PAYMENT_CHECK = 'Check'
 
     PAYMENT_TYPES = (
         (PAYMENT_CASH, 'Cash'),
+        (PAYMENT_INSTALLMENT, 'Installment'),
         (PAYMENT_CHECK, 'Check'),
     )
 
@@ -18,7 +20,8 @@ class Invoice(models.Model):
         blank=True, null=True, on_delete=models.SET_NULL
     )
 
-    payment_type = models.CharField(choices=PAYMENT_TYPES, default=PAYMENT_CASH, max_length=100)
+    payment_type = models.CharField(
+        choices=PAYMENT_TYPES, default=PAYMENT_CASH, max_length=100)
 
     bank_details = models.ForeignKey(
         'banking_system.Bank', related_name='bank_detail_payments',
@@ -64,3 +67,21 @@ class Invoice(models.Model):
 
     def __str__(self):
         return str(self.id).zfill(7)
+
+
+
+class InvoiceInstallment(models.Model):
+    invoice = models.ForeignKey(
+        Invoice, related_name='invoice_installment', on_delete=models.CASCADE)
+    paid_amount = models.DecimalField(
+        max_digits=65, decimal_places=2, default=0, blank=True, null=True
+    )
+    description = models.TextField(blank=True, null=True)
+    date = models.DateField(
+        default=timezone.now, blank=True, null=True)
+
+    def __str__(self):
+        return (
+            '%s Installment' % self.invoice.customer.name if
+            self.invoice.customer else ''
+        )
