@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.utils import timezone
 
 
@@ -67,6 +68,52 @@ class Invoice(models.Model):
 
     def __str__(self):
         return str(self.id).zfill(7)
+
+    def is_installment(self):
+        invoice_installments = InvoiceInstallment.objects.filter(
+            invoice__id=self.id)
+
+        grand_total = self.grand_total
+
+        if invoice_installments.exists():
+            total_paid_amount = invoice_installments.aggregate(
+                Sum('paid_amount'))
+            total_paid_amount = float(
+                total_paid_amount.get('paid_amount__sum') or 0
+            )
+
+        else:
+            total_paid_amount = 0
+
+        if float(grand_total) <= total_paid_amount:
+            return True
+
+        return False
+
+    def remaining_installment(self):
+        invoice_installments = InvoiceInstallment.objects.filter(
+            invoice__id=self.id)
+
+        grand_total = self.grand_total
+
+        if invoice_installments.exists():
+            total_paid_amount = invoice_installments.aggregate(
+                Sum('paid_amount'))
+            total_paid_amount = float(
+                total_paid_amount.get('paid_amount__sum') or 0
+            )
+
+        else:
+            total_paid_amount = 0
+
+        return float(grand_total) - total_paid_amount
+
+    def has_installment(self):
+        if self.invoice_installment.all().exists():
+            return True
+
+        return False
+
 
 
 

@@ -44,6 +44,7 @@
                                         <th>Invoice</th>
                                         <th>Customer</th>
                                         <th>Payment</th>
+                                        <th>Installment</th>
                                         <th>Quantity</th>
                                         <th>Sub Total</th>
                                         <th>Grand Total</th>
@@ -61,12 +62,17 @@
                                         <td>{{ invoice.id|stringformat:"07d" }}</td>
                                         <td>{{ invoice.customer.name|title }}</td>
                                         <td>{{ invoice.payment_type }}</td>
+                                        {% if invoice.has_installment  %}
+                                            <td>{% if invoice.is_installment %}<i class="fa fa-check-circle" style="color: #439D44"></i>{% else %}<i class="fa fa-times-circle" style="color: #C9312C"></i>{% endif %}</td>
+                                        {% else %}
+                                            <td>-</td>
+                                        {% endif %}
                                         <td>{{ invoice.total_quantity|floatformat:-2|intcomma }}</td>
                                         <td>{{ invoice.sub_total|floatformat:-2|intcomma }}</td>
                                         <td>{{ invoice.grand_total|floatformat:-2|intcomma }}</td>
                                         <td class="text-center">
                                             <a href="{% url 'sales:invoice_detail' pk=invoice.id %}"><button class="btn btn-primary btn-xs">View</button></a>
-                                            {% if invoice.invoice_installment.all.exists %}
+                                            {% if invoice.has_installment %}
                                                 <a href="{% url 'sales:installment_list' invoice_id=invoice.id %}"><button class="btn btn-warning btn-xs">Installments</button></a>
                                             {% else %}
                                                 <button class="btn default btn-xs">Not Available</button>
