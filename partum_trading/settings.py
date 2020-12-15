@@ -74,7 +74,8 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.request'
+                'django.template.context_processors.request',
+                'common.context_processor.settings_context'
             ]
         },
     },
@@ -145,6 +146,17 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
 
 # STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+
+COMPANY_NAME = 'Partum Solutions'
+COMPANY_SHORT_NAME = 'Partum'
+COMPANY_SLOGAN = 'Go, Go and Go'
+FULL_ADDRESS = 'Office #2, Block C, LakeCity, Lahore'
+SHORT_ADDRESS = 'C22 LakeCity'
+LINE_CONTACT = ''
+PRIMARY_CONTACT = '+923458364441'
+SECONDARY_CONTACT = '+923328364441'
+
 
 try:
     from partum_trading.settings_local import *

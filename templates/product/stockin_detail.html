@@ -42,8 +42,10 @@
                                     <th class="text-center">Product</th>
                                     <th class="text-center"><small>Stock Quantity</small></th>
                                     <th class="text-center"><small>Price Per Item</small></th>
+                                    <th class="text-center"><small>Selling %</small></th>
                                     <th class="text-center"><small>Total Amount</small></th>
                                     <th class="text-center"><small>Buying Price Item</small></th>
+                                    <th class="text-center"><small>Buying %</small></th>
                                     <th class="text-center"><small>Total Buying Amount</small></th>
                                     <th class="text-center"><small>Order Dated</small></th>
                                 </tr>
@@ -55,8 +57,10 @@
                                         <td>{{ stock_in.product }}</td>
                                         <td>{{ stock_in.stock_quantity|floatformat:-2|intcomma}}</td>
                                         <td>{{ stock_in.price_per_item|floatformat:-2|intcomma }}</td>
+                                        <td>{{ stock_in.selling_percent|floatformat:-2|intcomma }}</td>
                                         <td>{{ stock_in.total_amount|floatformat:-2|intcomma }}</td>
                                         <td>{{ stock_in.buying_price_item|floatformat:-2|intcomma }}</td>
+                                        <td>{{ stock_in.buying_percent|floatformat:-2|intcomma }}</td>
                                         <td>{{ stock_in.total_buying_amount|floatformat:-2|intcomma }}</td>
                                         <td>{{ stock_in.dated_order }}</td>
                                     </tr>

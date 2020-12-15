@@ -65,11 +65,16 @@ class StockIn(models.Model):
                                          null=True, blank=True)
     total_amount = models.DecimalField(max_digits=65, decimal_places=2, default=0,
                                        null=True, blank=True)
+    selling_percent = models.DecimalField(max_digits=65, decimal_places=2, default=0,
+                                       null=True, blank=True)
+
     buying_price_item = models.DecimalField(max_digits=65, decimal_places=2, default=0,
                                             null=True, blank=True,
                                             help_text='Buying Price for a Single Item')
     total_buying_amount = models.DecimalField(max_digits=65, decimal_places=2, default=0,
                                               null=True, blank=True)
+    buying_percent = models.DecimalField(max_digits=65, decimal_places=2, default=0,
+                                       null=True, blank=True)
     dated_order = models.DateField(default=timezone.now, null=True, blank=True)
 
     def __str__(self):

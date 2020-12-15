@@ -5,8 +5,8 @@
 {% load staticfiles %}
 <div class="content-wrapper">
     <section class="content-header">
-        <a href="{% url 'customer:ledger_debit' pk=customer.id %}"><button type="button" value="Create" class="btn btn-success">Debit/Payment</button></a>
-        <a href="{% url 'customer:ledger_credit' pk=customer.id %}"><button type="button" value="Create" class="btn btn-danger">Credit/Payment</button></a>
+        <a href="{% url 'customer:ledger_debit' pk=customer.id %}"><button type="button" value="Create" class="btn btn-success">Add Ledger</button></a>
+        <a href="{% url 'customer:ledger_credit' pk=customer.id %}"><button type="button" value="Create" class="btn btn-danger">Pay Ledger</button></a>
         <ol class="breadcrumb">
             <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> Home</a></li>
             <li><a href="{% url 'customer:list' %}"> Customer List</a></li>
