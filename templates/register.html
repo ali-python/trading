@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Log in</title>
+    <title>Register</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
@@ -36,31 +36,42 @@
     <div class="login-box-body">
         <p class="login-box-msg">Sign in to start your session</p>
 
-        <form action="{% url 'common:login' %}" method="post">
-            {% csrf_token %}
-            <div class="form-group has-feedback">
-                <input type="text" class="form-control" name="username" placeholder="Username">
-                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-            </div>
-            <div class="form-group has-feedback">
-                <input type="password" class="form-control" placeholder="Password" name="password">
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-            </div>
-            <div class="row">
-                <div class="col-xs-8">
-                    <div class="checkbox icheck">
-                        <label>
-                            <input type="checkbox"> Remember Me
-                        </label>
+        <form class="form-login" method="post" action="{% url 'common:register' %}">
+            <h2 class="form-login-heading">Registration Form</h2>
+            <div class="login-wrap">
+                {% if form.errors or form.non_field_errors %}
+                    <div class="error-alert">
+                        <i class="fa fa-warning pull-center"></i>
                     </div>
-                </div>
-                <!-- /.col -->
-                <div class="col-xs-4">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
-                </div>
-                <!-- /.col -->
+                {% endif %}
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div>
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                <h5>Register yourself Free!</h5>
+                 <input type="text" class="form-control" placeholder="First Name" name="firstname" autofocus><br>
+                  <input type="text" class="form-control" placeholder="Last Name" name="lastname" autofocus><br>
+                  <input type="email" class="form-control" placeholder="Email" name="email" autofocus><br>
+                  <input type="text" class="form-control" placeholder="Email" name="email" placeholder="eg:+968-9xxxxxxx" autofocus><br>
+                <input type="text" class="form-control" placeholder="Username" name="username" value="{{ username }}" autofocus>
+                {% if form.errors %}
+                    {{ form.errors.username }}
+                {% endif %}
+                <br>
+                <input type="password" class="form-control" name="password1" placeholder="Password" value="{{ password1 }}">
+                {% if form.errors %}
+                    {{ form.errors.password1  }}
+                {% endif %}
+                <br>
+                <input type="password" class="form-control" name="password2" placeholder="Confirm Password" value="{{ password2 }}">
+                {% if form.errors %}
+                    {{ form.errors.password2  }}
+                {% endif %}
+                <br>
+                <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-lock"></i> Register</button>
             </div>
-            <a href="{% url 'common:register' %}">register</a>
         </form>
 
 <!--        <div class="social-auth-links text-center">-->

@@ -17,7 +17,43 @@ from django.views.generic import TemplateView, RedirectView, UpdateView
 from django.views.generic import FormView
 from django.http import HttpResponseRedirect,HttpResponse
 from common.models import AdminConfiguration
+from django.contrib.auth import authenticate
 
+
+
+class RegisterView(FormView):
+    form_class = auth_forms.UserCreationForm
+    template_name = 'register.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('index'))
+
+        return super(RegisterView, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # register new user in the system
+        user = form.save()
+        username = form.cleaned_data.get('username')
+        raw_password = form.cleaned_data.get('password1')
+        auth_user = authenticate(username=username, password=raw_password)
+        auth_login(self.request, auth_user)
+
+        return HttpResponseRedirect(reverse('product:list'))
+
+    def form_invalid(self, form):
+        return super(RegisterView, self).form_invalid(form)
+
+    def get_context_data(self, **kwargs):       
+        context = super(RegisterView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context.update({
+                'username': self.request.POST.get('username'),
+                'password1': self.request.POST.get('password1'),
+                'password2': self.request.POST.get('password2')
+            })
+
+        return 
 
 class LoginView(FormView):
     template_name = 'login.html'
