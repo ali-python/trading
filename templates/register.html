@@ -54,7 +54,7 @@
                  <input type="text" class="form-control" placeholder="First Name" name="firstname" autofocus><br>
                   <input type="text" class="form-control" placeholder="Last Name" name="lastname" autofocus><br>
                   <input type="email" class="form-control" placeholder="Email" name="email" autofocus><br>
-                  <input type="text" class="form-control" placeholder="Email" name="email" placeholder="eg:+968-9xxxxxxx" autofocus><br>
+                  <input type="text" class="form-control" placeholder="Phone" name="email" placeholder="eg:+968-9xxxxxxx"  minlength="10" autofocus><br>
                 <input type="text" class="form-control" placeholder="Username" name="username" value="{{ username }}" autofocus>
                 {% if form.errors %}
                     {{ form.errors.username }}
