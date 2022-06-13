@@ -39,7 +39,7 @@ class RegisterView(FormView):
         auth_user = authenticate(username=username, password=raw_password)
         auth_login(self.request, auth_user)
 
-        return HttpResponseRedirect(reverse('product:list'))
+        return HttpResponseRedirect(reverse('common:login'))
 
     def form_invalid(self, form):
         return super(RegisterView, self).form_invalid(form)
