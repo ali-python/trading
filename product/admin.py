@@ -1,5 +1,5 @@
 from django.contrib import admin
-from product.models import ProductCategory, Product, StockIn, StockOut, PurchasedItem
+from product.models import ProductCategory, Product, StockIn, StockOut, PurchasedItem, KarigarProducts
 
 
 class ProductCategoryAdmin(admin.ModelAdmin):
@@ -58,3 +58,4 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(StockIn, StockInAdmin)
 admin.site.register(StockOut, StockOutAdmin)
 admin.site.register(PurchasedItem, PurchasedItemAdmin)
+admin.site.register(KarigarProducts)

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Abu Abeer al Gawabry Trading </title>
+    <title>Tanveer Fashion </title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'bower_components/font-awesome/css/font-awesome.min.css' %}">
@@ -25,9 +25,9 @@
         <!-- Logo -->
         <a href="#" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>Trading</b></span>
+            <span class="logo-mini"><b>TF</b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>AAAG Trading</b></span>
+            <span class="logo-lg"><b>Tanveer Fashion</b></span>
         </a>
 
         <!-- Header Navbar: style can be found in header.less -->
@@ -37,7 +37,7 @@
                 <span class="sr-only">Toggle navigation</span>
             </a>
             <div  class="header">
-                <span style="color:white;"><h4><b> Abu Abeer al Gawabry Trading</b></h4></span>
+                <span style="color:white;"><h4><b>Tanveer Fashion</b></h4></span>
             </div>
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
@@ -93,17 +93,19 @@
                 </li>
                 <li class="treeview {% block customer %}{% endblock %}">
                     <a href="#">
-                        <i class="fa fa-user"></i> <span>Customers</span>
+                        <i class="fa fa-user"></i> <span>Customers and Karigar</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{% block customer_create %}{% endblock %}"><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Add Customer</a></li>
+                        <li class="{% block customer_create %}{% endblock %}"><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Add Customer / Karigar</a></li>
                         <li class="{% block customer_list %}{% endblock %}"><a href="{% url 'customer:list' %}"><i class="fa fa-circle-o"></i>Customer List</a></li>
+                        <li class="{% block karigar_list %}{% endblock %}"><a href="{% url 'customer:list-karigar' %}"><i class="fa fa-circle-o"></i>Karigar List</a></li>
+
                     </ul>
                 </li>
-                <li class="treeview {% block bank %}{% endblock %}">
+                <!-- <li class="treeview {% block bank %}{% endblock %}">
                     <a href="#">
                         <i class="fa fa-university"></i> <span>Banking System</span>
                         <span class="pull-right-container">
@@ -114,7 +116,19 @@
                         <li class="{% block add_bank %}{% endblock %}"><a href="{% url 'bank:add' %}"><i class="fa fa-circle-o"></i>Add Bank</a></li>
                         <li class="{% block bank_list %}{% endblock %}"><a href="{% url 'bank:list' %}"><i class="fa fa-circle-o"></i>Bank List</a></li>
                     </ul>
-                </li>
+                </li> -->
+                <!-- <li class="treeview {% block kariagr %}{% endblock %}">
+                    <a href="#">
+                        <i class="fa fa-university"></i> <span>Karigar</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{% block add_kariagr %}{% endblock %}"><a href="{% url 'customer:add_karigar' %}"><i class="fa fa-circle-o"></i>Add Karigar</a></li>
+                        <li class="{% block kariagr_list %}{% endblock %}"><a href="{% url 'bank:list' %}"><i class="fa fa-circle-o"></i>Karigar List</a></li>
+                    </ul>
+                </li> -->
                 <li class="header">Sales & Expenses</li>
                 <li class="treeview {% block expense %}{% endblock %}">
                     <a href="#">
@@ -183,7 +197,7 @@
         <div class="pull-right hidden-xs">
             <b>Version</b> 2.4.18
         </div>
-        <strong>Copyright &copy; 2022 <a href="#">Abu Abeer al Gawabry Trading</a>.</strong> All rights
+        <strong>Copyright &copy; 2022 <a href="#">Tanveer Fashion</a>.</strong> All rights
         reserved.
     </footer>
 </div>
@@ -201,17 +215,6 @@
     <script src="{% static 'bower_components/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
     <script src="{% static 'bower_components/chart.js/Chart.js' %}"></script>
     <script src="{% static 'dist/js/demo.js' %}"></script>
-
-    <script>
-        var notification_count = 0;
-        {% for p in p_n %}
-            {% if p.product_available_items <= p.notify_qty %}
-                    notification_count += 1;
-            {% endif %}
-        {% endfor %}
-
-        $('.notification_count').text(notification_count);
-    </script>
 
 {% endblock %}
 </body>

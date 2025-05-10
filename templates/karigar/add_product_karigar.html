@@ -8,8 +8,8 @@
     <section class="content-header">
         <ol class="breadcrumb">
             <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="{% url 'product:add_category' %}">Product Category</a></li>
-            <li class="active">Add Product</li>
+            <!-- <li><a href="{% url 'product:add_category' %}">Product Category</a></li> -->
+            <li class="active">Add Karigar Product</li>
         </ol>
     </section>
     <br>
@@ -19,33 +19,30 @@
             <div class="col-md-6 pull-left">
                 <div class="box">
                     <div class="box-header">
-                        <h4 class="text-center"><b>Add Product</b></h4>
+                        <h4 class="text-center"><b>Add Karigar Product | {{customer.name|title}}</b></h4>
                     </div>
                     <div class="box-body">
-                        <form action="{% url 'product:add' %}" method="post" enctype="multipart/form-data" autocomplete="off">
+                        <form action="{% url 'product:karigar_product_add' pk=customer.id %}" method="post" enctype="multipart/form-data" autocomplete="off">
                             {% csrf_token %}
                             <div class="row">
+                                <input type="hidden" name="karigar" value="{{customer.id}}">
                                 <div class="col-md-12 pull-left form-group">
                                     <label class="form-control-label">Name <span style="color:red">*</span></label>
                                     <input type="text" name="name" class="form-control form-control-alternative" placeholder="Name" required>
                                 </div>
-                                <div class="col-md-12 form-group">
-                                    <label class="form-control-label" name="category">Category<span style="color:red">*</span></label>
-                                    <select class="form-control form-control-alternative" name="category">
-                                    {% for category in category %}
-                                        <option value="{{category.id}}">{{category.category}}</option>
-                                    {% endfor %}
-                                    </select>
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Description <span style="color:red">*</span></label>
+                                    <input type="text" name="decription" class="form-control form-control-alternative" placeholder="Name" required>
                                 </div>
-                                <!-- <div class="col-md-12 pull-left form-group">
-                                    <label class="form-control-label">Notify Quantity <span style="color:red">*</span></label>
-                                    <input type="number" name="notify_qty" class="form-control form-control-alternative" placeholder="Notify Quantity" required>
-                                </div> -->
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Amount <span style="color:red">*</span></label>
+                                    <input type="number" name="karigar_amount" class="form-control form-control-alternative" placeholder="Notify Quantity" required>
+                                </div>
                                 <div class="col-md-12 form-group">
                                     <label class="form-control-label">Product Image</label>
                                     <input type="file" name="image" accept="image/*" capture="environment"
                                            class="form-control form-control-alternative" />
-                                    <small class="form-text text-muted">You can upload from your computer </small>
+                                    <small class="form-text text-muted">You can upload from your computer</small>
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label>Preview:</label><br>

@@ -58,7 +58,7 @@
                                     <div class="row">
                                         <div class="col-xs-6 col-md-6">
                                             <div id="form-control  item-data-sc" class="table-responsive item-data-sc" style="height: 500px; overflow: auto; border: 1px solid #eee">
-                                                <table class="table table-bordered">
+                                                <table class="table table-bordered" id="purchaseTable">
                                                     <thead>
                                                     <tr class="item-row">
                                                         <th>Item</th>
@@ -83,12 +83,12 @@
                                                     <div class="col-xs-6 col-md-6">
                                                         <strong>Billed To:</strong> <span>{{today_date|date:'d-m-y'}}</span>
                                                     </div>
-                                                    <div class="col-xs-6 col-md-6">
+                                                    <!-- <div class="col-xs-6 col-md-6">
                                                         <select class="form-control payment_type" name="payment_type" id="payment_type">
                                                             <option value="Cash">Cash</option>
                                                             <option value="Installment">Installment</option>
                                                         </select>
-                                                    </div>
+                                                    </div> -->
                                                     <div class="bank-wrapper" style="display: none">
                                                         <div class="col-xs-6 col-md-6">
                                                             <br>
@@ -164,7 +164,7 @@
                                                         <td colspan="3" class="text-right">Remaining Amount</td>
                                                         <td><span id="remainingAmount">0</span></td>
                                                     </tr>
-                                                    <tr>
+                                                    <!-- <tr>
                                                         <td colspan="4" class="text-center"><h4><strong>Cash Calculator</strong></h4></td>
                                                     </tr>
                                                     <tr>
@@ -174,7 +174,7 @@
                                                     <tr>
                                                         <td class="text-right" colspan="3">Returned Cash</td>
                                                         <td><span id="returned_cash">0</span></td>
-                                                    </tr>
+                                                    </tr> -->
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -374,35 +374,35 @@
                     alert('Something is wrong! please check all fields and try again');
 
                 });
-            });
+                });
 
-            $('.new-customer').on('click', function () {
+                $('.new-customer').on('click', function () {
                 $('.existing-customer').hide();
                 $('.new-customer-form').show();
                 $('.customer').val('');
-            });
+                });
 
-            $('.added-customer').on('click', function () {
+                $('.added-customer').on('click', function () {
                 $('.existing-customer').show();
                 $('.new-customer-form').hide();
                 $('.customer_name').val('');
                 $('.customer_phone').val('');
-            });
+                });
 
-            $('.payment_type').on('change', function () {
+                $('.payment_type').on('change', function () {
                 if ($(this).val() == 'Cash') {
                     $('.bank-wrapper').hide();
                 } else {
                     $('.bank-wrapper').show();
                 }
-            });
+                });
 
-        });
-        $('.btn-primary').on('click', function () {
-            $('.item-error').hide();
-        });
+                });
+                $('.btn-primary').on('click', function () {
+                $('.item-error').hide();
+                });
 
-    </script>
+                </script>
 
 
 {% endblock %}

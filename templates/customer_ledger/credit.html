@@ -16,8 +16,8 @@
         <div class="row">
             <div class="col-md-6 pull-left">
                 <div class="box">
-                    <div class="box-header">
-                        <h3 class="text-center"><b>{{ customer.name|title }} |</b> <small><b>Credit Amount</b></small></h3>
+                    <div class="box-header"> 
+                        <h3 class="text-center"><b>{{ customer.name|title }}</b> <strong>{% if customer.karigar == "karigar" %} Karigar {% else %} Customer {% endif %}</strong> <small><b>Credit Amount</b></small></h3>
                     </div>
                     <div class="box-body">
                         <form action="{% url 'customer:ledger_debit' pk=customer.id %}" method="post" autocomplete="off">

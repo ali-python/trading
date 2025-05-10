@@ -2,7 +2,7 @@
 {% block customer %}active{% endblock %}
 {% block customer_create %}active{% endblock %}
 {% block content %}
-{% load staticfiles %}
+{% load static %}
 
 <div class="content-wrapper">
     <section class="content-header">
@@ -18,7 +18,7 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h4 class="text-center"><b>Add Customer</b></h4>
+                        <h4 class="text-center"><b>Add Customer / Karigar</b></h4>
                     </div>
                     <div class="box-body">
                         <form action="{% url 'customer:add' %}" method="post" autocomplete="off">
@@ -62,6 +62,16 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col-md-4 pull-left form-group">
+                                    <label class="form-control-label">Karigar or Customer <span style="color:red">*</span></label>
+                                    <select name="karigar" class="form-control form-control-alternative" required>
+                                        <option value="">Select karigar or customer</option>
+                                        <option value="karigar">Karigar</option>
+                                        <option value="customer">Customer</option>
+                                      </select>
+                                </div>
+                                </div>
+                                <div class="row">
                                 <div class="col-md-2 pull-left form-group">
                                     <label class="form-control-label"></label>
                                     <button type="submit" value="Create" class="btn btn-primary form-control">Save</button>

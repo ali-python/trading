@@ -1,7 +1,18 @@
 from django.db import models
 from django.utils import timezone
 from django.db.models import Sum
+from customer.models import Customer
 
+class KarigarProducts(models.Model):
+    karigar = models.ForeignKey(Customer, on_delete=models.CASCADE,
+                                 null=True, blank=True, related_name='product_karigar')
+    image = models.ImageField(upload_to='product_images/', null=True, blank=True)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    decription = models.CharField(max_length=400, null=True, blank=True)
+    karigar_amount = models.DecimalField(max_digits=65, decimal_places=2, default=0,
+                                   null=True, blank=True)
+    date = models.DateField(default=timezone.now, null=True, blank=True)
+    ready = models.BooleanField(default=False)
 
 class ProductCategory(models.Model):
     category = models.CharField(max_length=200, null=True, blank=True)
@@ -27,6 +38,7 @@ class Product(models.Model):
         max_digits=65, decimal_places=2, default=0,
         null=True, blank=True
     )
+    image = models.ImageField(upload_to='product_images/', null=True, blank=True)
     date = models.DateField(default=timezone.now, null=True, blank=True)
 
     def __str__(self):

@@ -1,38 +1,35 @@
 {% extends 'base.html' %}
-{% block product %}active{% endblock %}
-{% block product_list %}active{% endblock %}
+{% block customer %}active{% endblock %}
+{% block customer_list %}active{% endblock %}
 {% block content %}
-{% load static %}
-
+{% load staticfiles %}
 <div class="content-wrapper">
     <section class="content-header">
+        <a href="{% url 'product:karigar_product_add' pk=customer.id %}"><button type="button" value="Create" class="btn btn-success">Add Product</button></a>
+        <!-- <a href=""><button type="button" value="Create" class="btn btn-danger">Pay Ledger</button></a> -->
         <ol class="breadcrumb">
             <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Product List</li>
+            <li><a href="{% url 'customer:list-karigar' %}"> Karigar List</a></li>
+            <li class="active">Karigar Products</li>
         </ol>
     </section>
-    <br>
     <section class="content">
         <div class="row">
-            <div class="col-md-12 form-group">
+            <div class="col-md-12">
                 <div class="box">
-                    <div class="row">
-                        <h4 class="text-center"><b>Product List</b></h4>
+                    <div class="box-header">
+                        <h3 class="text-center"><b>{{ customer.name|title }} |</b><small><b>Karigar Product</b></small></h3>
                     </div>
-                    <br>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="col-md-4 pull-left">
-                                <input type="text" class="form-control name_search" placeholder="Search by Name ..." >
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control category_search" placeholder="Search by Category ...">
+                                <input type="date" class="form-control date_search" placeholder="Search by Date ..." >
                             </div>
                             <div class="col-md-2 pull-right">
                                 <button class="form-control btn btn-primary search">Search</button>
                             </div>
-                            <br><br>
-                            <hr>
+                        <br><br>
+                        <hr>
                         </div>
                     </div>
                     <div class="box-body">
@@ -41,21 +38,20 @@
                                 <thead class="thead-dark">
                                 <tr>
                                     <th>Image</th>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <!-- <th>Notify Quantity</th> -->
-                                    <th>Total Quantity</th>
-                                    <th>Available Item</th>
                                     <th>Date</th>
-                                    <th class="text-center">Action</th>
+                                    <th>Name</th>
+                                    <th>Decription</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Acction</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for product in object_list %}
                                 <tr>
-                                    <!-- {% load humanize %} -->
+                                    {% load humanize %}
                                     <td>
-                                        {% if product.image %}
+                                    {% if product.image %}
                                             <img src="{{ product.image.url }}" alt="Product Image"
                                                  style="max-width: 80px; max-height: 80px; cursor: pointer;"
                                                  data-toggle="modal" data-target="#imageModal{{ product.id }}">
@@ -79,30 +75,25 @@
                                         {% else %}
                                             No image
                                         {% endif %}
-                                    </td>
-                                    
-                                    
-                                    <td>{{product.name|title}}</td>
-                                    <td>{{product.category|title}}</td>
-                                    <!-- <td>{{product.notify_qty|floatformat:-2}}</td> -->
-                                    <td>{{product.total_items|floatformat:-2}}</td>
-                                    <td>{{product.product_available_items|floatformat:-2}}</td>
+                                        </td>
                                     <td>{{product.date}}</td>
+                                    <td>{{product.name}}</td>
+                                    <td>{{product.decription}}</td>
+                                    <td>{{product.karigar_amount|floatformat:-2|intcomma }}</td>
+                                    <td>{% if product.ready == True  %}<span style="color: Green;"> Complete</span> {%else%} <span style="color:red">Not Complete</span>{% endif %}</td>
                                     <td class="text-center">
-                                        <a href="{% url 'product:update' pk=product.id %}"><button class="btn btn-primary btn-xs">Update</button></a>
-                                        <a href="{% url 'product:stockin_detail' pk=product.id %}"><button class="btn btn-success btn-xs">Stock In</button></a>
-                                        <a href="{% url 'product:stockout_detail' pk=product.id %}"><button class="btn btn-danger btn-xs">Stock Out</button></a>
+                                        <!-- <a href=""><button class="btn btn-primary btn-xs">Add Product</button></a> -->
+                                        <a href="{% url 'product:karigar_product_update' pk=product.id %}"><button class="btn btn-info btn-xs">Update Status</button></a>
                                     </td>
                                 </tr>
                                 {% endfor %}
-
                                 </tbody>
                             </table>
                             {% if paginator.page_range|length > 1 %}
                             <div class="text-center col-lg-12">
                                 <ul class="pagination justify-content-center">
-                                    <li><a  style="background-color: #3070A8; color: white" class="page_previous" href="{% if page_obj.has_previous %}{% url 'product:list' %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}" title="Previous"><<</a></li>
-                                    <li><a style="background-color: #3070A8; color: white" class="page_next" href="{% if page_obj.has_next %}{% url 'product:list' %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}" title="Next">>></a></li>
+                                    <li><a  style="background-color: #3070A8; color: white" class="page_previous" href="{% if page_obj.has_previous %}{% url 'customer:ledger_list' pk=customer.id %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}" title="Previous"><<</a></li>
+                                    <li><a style="background-color: #3070A8; color: white" class="page_next" href="{% if page_obj.has_next %}{% url 'customer:ledger_list' pk=customer.id %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}" title="Next">>></a></li>
                                 </ul>
                             </div>
                             {% endif %}
@@ -113,16 +104,4 @@
         </div>
     </section>
 </div>
-{% endblock %}
-
-{% block script %}
-    {{ block.super }}
-<script>
-$(function () {
-    $('.search').on('click', function () {
-        var url = '{% url "product:list" %}';
-        window.location.href  = url + '?' + 'product_name=' + $('.name_search').val() + '&product_category=' +  $('.category_search').val();
-    });
-})
-</script>
 {% endblock %}

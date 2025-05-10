@@ -1,8 +1,12 @@
 from django import forms
 from product.models import (
-    ProductCategory, Product, StockIn, StockOut, PurchasedItem
+    ProductCategory, Product, StockIn, StockOut, PurchasedItem, KarigarProducts
 )
 
+class KarigarProductsForm(forms.ModelForm):
+    class Meta:
+        model = KarigarProducts
+        fields = '__all__'
 
 class ProductCategoryForm(forms.ModelForm):
     class Meta:

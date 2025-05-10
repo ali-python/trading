@@ -4,6 +4,7 @@ from django.utils import timezone
 
 
 class Customer(models.Model):
+    karigar = models.BooleanField(default=False)
     name = models.CharField(max_length=200)
     father_name = models.CharField(max_length=200, null=True, blank=True)
     cnic = models.CharField(max_length=200)

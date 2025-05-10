@@ -20,7 +20,16 @@ class AddCustomer(FormView):
             AddCustomer, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        form.save()
+        karigar = form.save()
+        print(self.request.POST.get("karigar"))
+
+        if (self.request.POST.get("karigar") == "karigar"):
+            karigar.karigar = True
+            karigar.save()
+        elif (self.request.POST.get("karigar") == "customer"):
+            karigar.karigar = False
+            karigar.save()
+
         return HttpResponseRedirect(reverse('customer:list'))
 
     def form_invalid(self, form):
@@ -56,6 +65,34 @@ class CustomerList(ListView):
 
         return queryset.order_by('-id')
 
+class KarigarList(ListView):
+    model = Customer
+    template_name = 'customer/karigar_list.html'
+    paginate_by = 100
+    ordering = '-id'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            KarigarList, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if not queryset:
+            queryset = Customer.objects.all().order_by('-id')
+
+        if self.request.GET.get('customer_name'):
+            queryset = queryset.filter(
+                name__icontains=self.request.GET.get('customer_name'))
+
+        if self.request.GET.get('customer_id'):
+            queryset = queryset.filter(
+                cnic=self.request.GET.get('customer_id').lstrip('0')
+            )
+
+        return queryset.order_by('-id')
 
 class UpdateCustomer(UpdateView):
     model = Customer
@@ -182,3 +219,24 @@ class CreditCustomerLedgerFormView(DebitCustomerLedgerFormView):
             'customer': customer
         })
         return context
+    
+
+class AddKarigar(FormView):
+    form_class = CustomerForm
+    template_name = 'karigar/karigar_add.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            AddKarigar, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        karigar = form.save()
+        karigar.karigar = True
+        karigar.save()
+        return HttpResponseRedirect(reverse('customer:list'))
+
+    def form_invalid(self, form):
+        return super(AddKarigar, self).form_invalid(form)
