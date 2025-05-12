@@ -148,126 +148,267 @@ class GenerateInvoiceAPIView(View):
     def dispatch(self, request, *args, **kwargs):
         return super(GenerateInvoiceAPIView, self).dispatch(request, *args, **kwargs)
 
+    # def post(self, request, *args, **kwargs):
+    #     customer_name = self.request.POST.get('customer_name')
+    #     customer_phone = self.request.POST.get('customer_phone')
+    #     customer_cnic = self.request.POST.get('customer_cnic')
+    #     sub_total = self.request.POST.get('sub_total')
+    #     discount = self.request.POST.get('discount')
+    #     shipping = self.request.POST.get('shipping')
+    #     grand_total = self.request.POST.get('grand_total')
+    #     totalQty = self.request.POST.get('totalQty')
+    #     remaining_payment = self.request.POST.get('remaining_amount')
+    #     paid_amount = self.request.POST.get('paid_amount')
+    #     cash_payment = self.request.POST.get('cash_payment')
+    #     returned_cash = self.request.POST.get('returned_cash')
+    #     payment_type = self.request.POST.get('payment_type')
+    #     bank = self.request.POST.get('bank')
+    #     items = json.loads(self.request.POST.get('items'))
+
+    #     with transaction.atomic():
+    #         invoice_form_kwargs = {
+    #             'discount': discount,
+    #             'grand_total': grand_total,
+    #             'total_quantity': totalQty,
+    #             'shipping': shipping,
+    #             'paid_amount': paid_amount,
+    #             'remaining_payment': remaining_payment,
+    #             'cash_payment': cash_payment,
+    #             'returned_payment': returned_cash,
+    #             'payment_type': payment_type,
+    #         }
+    #         invoice_form = InvoiceForm(invoice_form_kwargs)
+    #         invoice = invoice_form.save()
+
+    #         if self.request.POST.get('customer_id'):
+    #             customer_id = self.request.POST.get('customer_id')
+    #             customer = Customer.objects.get(id=customer_id)
+    #         else:
+    #             customer_form_kwargs = {
+    #                 'name': customer_name,
+    #                 'cnic': customer_cnic,
+    #                 'mobile': customer_phone,
+    #             }
+    #             customer_form = CustomerForm(customer_form_kwargs)
+    #             if customer_form.is_valid():
+    #                 customer = customer_form.save()
+    #                 customer_id = customer.id
+    #             else:
+    #                 customer_id = ''
+
+    #         if customer_id:
+    #             invoice.customer = customer
+    #             invoice.save()
+
+    #         for item in items:
+    #             product = Product.objects.get(id=item.get('item_id'))
+    #             latest_stockin = product.stockin_product.all().latest('id')
+
+    #             stock_out_kwargs = {
+    #                 'product': product.id,
+    #                 'invoice': invoice.id,
+    #                 'stock_out_quantity': float(item.get('qty')),
+    #                 'buying_price': (
+    #                         float(latest_stockin.buying_price_item) *
+    #                         float(item.get('qty'))),
+    #                 'selling_price': (
+    #                         float(item.get('price')) * float(item.get('qty'))),
+    #                 'date': timezone.now().date()
+    #             }
+    #             stock_out = StockOutForm(stock_out_kwargs)
+    #             stock_out.save()
+
+    #             purchased_item_kwargs = {
+    #                 'item': product.id,
+    #                 'invoice': invoice.id,
+    #                 'quantity': item.get('qty'),
+    #                 'price': item.get('price'),
+    #                 'purchase_amount': item.get('total'),
+    #             }
+    #             purchase_item = PurchasedItemForm(purchased_item_kwargs)
+    #             purchase_item.save()
+
+    #         if customer_id or self.request.POST.get('customer_id'):
+    #             if payment_type == 'Installment':
+    #                 installment_kwargs = {
+    #                     'invoice': invoice.id,
+    #                     'paid_amount': paid_amount,
+    #                     'description': 'Advance Payment'
+
+    #                 }
+    #                 installment__form = InvoiceInstallmentForm(
+    #                     installment_kwargs)
+    #                 installment__form.save()
+
+    #             elif float(remaining_payment):
+
+    #                 ledger_form_kwargs = {
+    #                     'customer': customer_id,
+    #                     'invoice': invoice.id,
+    #                     'debit_amount': remaining_payment,
+    #                     'details': (
+    #                             'Remaining Payment for Bill/Receipt No %s '
+    #                             % str(invoice.id).zfill(7)),
+    #                     'date': timezone.now()
+    #                 }
+
+    #                 customer_ledger = CustomerLedgerForm(ledger_form_kwargs)
+    #                 customer_ledger.save()
+
+    #         if payment_type == 'Check':
+    #             bank_details_kwargs = {
+    #                 'bank': bank,
+    #                 'invoice': invoice.id,
+    #                 'credit': paid_amount,
+    #                 'description': 'Invoice Payment is by Check/Bank.'
+    #             }
+    #             bank_details_form = BankDetailForm(bank_details_kwargs)
+    #             bank_details = bank_details_form.save()
+    #             invoice.bank = bank_details.bank
+    #             invoice.save()
+
+    #     return JsonResponse({'invoice_id': invoice.id})
+
     def post(self, request, *args, **kwargs):
-        customer_name = self.request.POST.get('customer_name')
-        customer_phone = self.request.POST.get('customer_phone')
-        customer_cnic = self.request.POST.get('customer_cnic')
-        sub_total = self.request.POST.get('sub_total')
-        discount = self.request.POST.get('discount')
-        shipping = self.request.POST.get('shipping')
-        grand_total = self.request.POST.get('grand_total')
-        totalQty = self.request.POST.get('totalQty')
-        remaining_payment = self.request.POST.get('remaining_amount')
-        paid_amount = self.request.POST.get('paid_amount')
-        cash_payment = self.request.POST.get('cash_payment')
-        returned_cash = self.request.POST.get('returned_cash')
-        payment_type = self.request.POST.get('payment_type')
-        bank = self.request.POST.get('bank')
-        items = json.loads(self.request.POST.get('items'))
+        try:
+            customer_name = request.POST.get('customer_name')
+            customer_phone = request.POST.get('customer_phone')
+            customer_cnic = request.POST.get('customer_cnic')
+            sub_total = request.POST.get('sub_total')
+            discount = request.POST.get('discount')
+            shipping = request.POST.get('shipping')
+            grand_total = request.POST.get('grand_total')
+            totalQty = request.POST.get('totalQty')
+            remaining_payment = request.POST.get('remaining_amount')
+            paid_amount = request.POST.get('paid_amount')
+            cash_payment = request.POST.get('cash_payment')
+            returned_cash = request.POST.get('returned_cash')
+            payment_type = request.POST.get('payment_type')
+            bank = request.POST.get('bank')
+            items = json.loads(request.POST.get('items'))
 
-        with transaction.atomic():
-            invoice_form_kwargs = {
-                'discount': discount,
-                'grand_total': grand_total,
-                'total_quantity': totalQty,
-                'shipping': shipping,
-                'paid_amount': paid_amount,
-                'remaining_payment': remaining_payment,
-                'cash_payment': cash_payment,
-                'returned_payment': returned_cash,
-                'payment_type': payment_type,
-            }
-            invoice_form = InvoiceForm(invoice_form_kwargs)
-            invoice = invoice_form.save()
-
-            if self.request.POST.get('customer_id'):
-                customer_id = self.request.POST.get('customer_id')
-                customer = Customer.objects.get(id=customer_id)
-            else:
-                customer_form_kwargs = {
-                    'name': customer_name,
-                    'cnic': customer_cnic,
-                    'mobile': customer_phone,
+            with transaction.atomic():
+                # Invoice form
+                invoice_form_kwargs = {
+                    'discount': discount,
+                    'grand_total': grand_total,
+                    'total_quantity': totalQty,
+                    'shipping': shipping,
+                    'paid_amount': paid_amount,
+                    'remaining_payment': remaining_payment,
+                    'cash_payment': cash_payment,
+                    'returned_payment': returned_cash,
+                    'payment_type': payment_type,
                 }
-                customer_form = CustomerForm(customer_form_kwargs)
-                if customer_form.is_valid():
-                    customer = customer_form.save()
-                    customer_id = customer.id
+                invoice_form = InvoiceForm(data=invoice_form_kwargs)
+                if not invoice_form.is_valid():
+                    return JsonResponse({'error': invoice_form.errors}, status=400)
+                invoice = invoice_form.save()
+
+                # Customer handling
+                customer = None
+                if request.POST.get('customer_id'):
+                    customer_id = request.POST.get('customer_id')
+                    try:
+                        customer = Customer.objects.get(id=customer_id)
+                    except Customer.DoesNotExist:
+                        return JsonResponse({'error': 'Customer not found.'}, status=400)
                 else:
-                    customer_id = ''
-
-            if customer_id:
-                invoice.customer = customer
-                invoice.save()
-
-            for item in items:
-                product = Product.objects.get(id=item.get('item_id'))
-                latest_stockin = product.stockin_product.all().latest('id')
-
-                stock_out_kwargs = {
-                    'product': product.id,
-                    'invoice': invoice.id,
-                    'stock_out_quantity': float(item.get('qty')),
-                    'buying_price': (
-                            float(latest_stockin.buying_price_item) *
-                            float(item.get('qty'))),
-                    'selling_price': (
-                            float(item.get('price')) * float(item.get('qty'))),
-                    'date': timezone.now().date()
-                }
-                stock_out = StockOutForm(stock_out_kwargs)
-                stock_out.save()
-
-                purchased_item_kwargs = {
-                    'item': product.id,
-                    'invoice': invoice.id,
-                    'quantity': item.get('qty'),
-                    'price': item.get('price'),
-                    'purchase_amount': item.get('total'),
-                }
-                purchase_item = PurchasedItemForm(purchased_item_kwargs)
-                purchase_item.save()
-
-            if customer_id or self.request.POST.get('customer_id'):
-                if payment_type == 'Installment':
-                    installment_kwargs = {
-                        'invoice': invoice.id,
-                        'paid_amount': paid_amount,
-                        'description': 'Advance Payment'
-
+                    customer_form_kwargs = {
+                        'name': customer_name,
+                        'cnic': customer_cnic,
+                        'mobile': customer_phone,
                     }
-                    installment__form = InvoiceInstallmentForm(
-                        installment_kwargs)
-                    installment__form.save()
+                    customer_form = CustomerForm(data=customer_form_kwargs)
+                    if customer_form.is_valid():
+                        customer = customer_form.save()
+                    else:
+                        return JsonResponse({'error': customer_form.errors}, status=400)
 
-                elif float(remaining_payment):
+                if customer:
+                    invoice.customer = customer
+                    invoice.save()
 
-                    ledger_form_kwargs = {
-                        'customer': customer_id,
+                # Handle items
+                for item in items:
+                    try:
+                        product = Product.objects.get(id=item.get('item_id'))
+                    except Product.DoesNotExist:
+                        return JsonResponse({'error': f"Product ID {item.get('item_id')} not found."}, status=400)
+
+                    latest_stockin = product.stockin_product.all().latest('id')
+
+                    stock_out_kwargs = {
+                        'product': product.id,
                         'invoice': invoice.id,
-                        'debit_amount': remaining_payment,
-                        'details': (
-                                'Remaining Payment for Bill/Receipt No %s '
-                                % str(invoice.id).zfill(7)),
-                        'date': timezone.now()
+                        'stock_out_quantity': float(item.get('qty')),
+                        'buying_price': float(latest_stockin.buying_price_item) * float(item.get('qty')),
+                        'selling_price': float(item.get('price')) * float(item.get('qty')),
+                        'date': timezone.now().date()
                     }
+                    stock_out_form = StockOutForm(data=stock_out_kwargs)
+                    if not stock_out_form.is_valid():
+                        return JsonResponse({'error': stock_out_form.errors}, status=400)
+                    stock_out_form.save()
 
-                    customer_ledger = CustomerLedgerForm(ledger_form_kwargs)
-                    customer_ledger.save()
+                    purchased_item_kwargs = {
+                        'item': product.id,
+                        'invoice': invoice.id,
+                        'quantity': item.get('qty'),
+                        'price': item.get('price'),
+                        'purchase_amount': item.get('total'),
+                    }
+                    purchase_item_form = PurchasedItemForm(data=purchased_item_kwargs)
+                    if not purchase_item_form.is_valid():
+                        return JsonResponse({'error': purchase_item_form.errors}, status=400)
+                    purchase_item_form.save()
 
-            if payment_type == 'Check':
-                bank_details_kwargs = {
-                    'bank': bank,
-                    'invoice': invoice.id,
-                    'credit': paid_amount,
-                    'description': 'Invoice Payment is by Check/Bank.'
-                }
-                bank_details_form = BankDetailForm(bank_details_kwargs)
-                bank_details = bank_details_form.save()
-                invoice.bank = bank_details.bank
-                invoice.save()
+                # Installment or Ledger
+                if customer:
+                    if payment_type == 'Installment':
+                        installment_kwargs = {
+                            'invoice': invoice.id,
+                            'paid_amount': paid_amount,
+                            'description': 'Advance Payment'
+                        }
+                        installment_form = InvoiceInstallmentForm(data=installment_kwargs)
+                        if not installment_form.is_valid():
+                            return JsonResponse({'error': installment_form.errors}, status=400)
+                        installment_form.save()
 
-        return JsonResponse({'invoice_id': invoice.id})
+                    elif float(remaining_payment):
+                        ledger_form_kwargs = {
+                            'customer': customer.id,
+                            'invoice': invoice.id,
+                            'debit_amount': remaining_payment,
+                            'details': f'Remaining Payment for Bill/Receipt No {str(invoice.id).zfill(7)}',
+                            'date': timezone.now()
+                        }
+                        ledger_form = CustomerLedgerForm(data=ledger_form_kwargs)
+                        if not ledger_form.is_valid():
+                            return JsonResponse({'error': ledger_form.errors}, status=400)
+                        ledger_form.save()
+
+                # Bank details
+                if payment_type == 'Check':
+                    bank_details_kwargs = {
+                        'bank': bank,
+                        'invoice': invoice.id,
+                        'credit': paid_amount,
+                        'description': 'Invoice Payment is by Check/Bank.'
+                    }
+                    bank_details_form = BankDetailForm(data=bank_details_kwargs)
+                    if not bank_details_form.is_valid():
+                        return JsonResponse({'error': bank_details_form.errors}, status=400)
+                    bank_details = bank_details_form.save()
+                    invoice.bank = bank_details.bank
+                    invoice.save()
+
+            return JsonResponse({'invoice_id': invoice.id})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
 
 
 class InvoiceDetailTemplateView(TemplateView):
