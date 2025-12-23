@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'sales',
     'expense',
     'banking_system',
+    'supplier',
 ]
 
 MIDDLEWARE = [
