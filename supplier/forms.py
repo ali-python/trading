@@ -9,4 +9,4 @@ class SupplierFormView(forms.ModelForm):
 class SupplierStatementFormView(forms.ModelForm):
     class Meta:
         model = SupplierStatement
-        fields = '__all__'
+        fields = ['supplier_amount', 'payment_amount', 'description', 'date']

@@ -120,23 +120,13 @@ class SupplierStatementUpdate(CustomLoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super(SupplierStatementUpdate, self).get_context_data(**kwargs)
-        supplier = (
-            Supplier.objects.get(supplier__id=self.kwargs.get('pk'))
-        )
-        context.update({
-            'supplier': supplier
-        })
+        statement = self.get_object()
+        context['supplier'] = statement.supplier
         return context
   
 class StatementPayment(CustomLoginRequiredMixin, FormView):
     form_class = SupplierStatementFormView
     template_name = 'supplier/payment.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        return super(
-            StatementPayment, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         obj = form.save()

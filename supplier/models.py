@@ -12,20 +12,16 @@ class Supplier(models.Model):
         return self.name or ''
 
     def supplier_remaining_amount(self):
-        supplier_statement = self.supplier.all()
-        try:
-            total_amount = supplier_statement.aggregate(Sum('supplier_amount'))
-            total_amount = supplier_statement.get('supplier_amount__sum') or 0
-            total_payments = supplier_statement.aggregate(Sum('payment_amount'))
-            total_payments = supplier_statement.get('payment_amount__sum') or 0
-        except:
-            total_amount = 0
-            total_payments = 0
-
+        data = self.statements.all().aggregate(
+            total_amount=Sum('supplier_amount'),
+            total_payments=Sum('payment_amount')
+        )
+        total_amount = data['total_amount'] or 0
+        total_payments = data['total_payments'] or 0
         return total_amount - total_payments
     
 class SupplierStatement(models.Model):
-    supplier = models.ForeignKey(Supplier,on_delete=models.CASCADE,related_name='supplier', blank=True, null=True)
+    supplier = models.ForeignKey(Supplier,on_delete=models.CASCADE,related_name='statements', blank=True, null=True)
     supplier_amount = models.DecimalField(max_digits=100, decimal_places=2, null=True, blank=True, default=0)
     payment_amount = models.DecimalField(max_digits=100, decimal_places=2, null=True, blank=True, default=0)
     description = models.TextField(max_length=200, blank=True, null=True)
