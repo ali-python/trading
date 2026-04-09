@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Atif and Ali </title>
+    <title> DP </title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'bower_components/font-awesome/css/font-awesome.min.css' %}">
@@ -23,11 +23,11 @@
     <header class="main-header">
 
         <!-- Logo -->
-        <a href="#" class="logo">
+        <a href="{% url 'common:index' %}" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>AA</b></span>
+            <span class="logo-mini"><b>DP</b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>Atif and Ali</b></span>
+            <span class="logo-lg"><b>DP</b></span>
         </a>
 
         <!-- Header Navbar: style can be found in header.less -->
@@ -37,7 +37,7 @@
                 <span class="sr-only">Toggle navigation</span>
             </a>
             <div  class="header">
-                <span style="color:white;"><h4><b>Atif and Ali</b></h4></span>
+                <span style="color:white;"><h4><b>DP</b></h4></span>
             </div>
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
@@ -93,15 +93,15 @@
                 </li>
                 <li class="treeview {% block customer %}{% endblock %}">
                     <a href="#">
-                        <i class="fa fa-user"></i> <span>Customers and Karigar</span>
+                        <i class="fa fa-user"></i> <span>Customers</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{% block customer_create %}{% endblock %}"><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Add Customer / Karigar</a></li>
+                        <li class="{% block customer_create %}{% endblock %}"><a href="{% url 'customer:add' %}"><i class="fa fa-circle-o"></i>Add Customer</a></li>
                         <li class="{% block customer_list %}{% endblock %}"><a href="{% url 'customer:list' %}"><i class="fa fa-circle-o"></i>Customer List</a></li>
-                        <li class="{% block karigar_list %}{% endblock %}"><a href="{% url 'customer:list-karigar' %}"><i class="fa fa-circle-o"></i>Karigar List</a></li>
+                        {% comment %} <li class="{% block karigar_list %}{% endblock %}"><a href="{% url 'customer:list-karigar' %}"><i class="fa fa-circle-o"></i>Karigar List</a></li> {% endcomment %}
 
                     </ul>
                 </li>
@@ -211,7 +211,7 @@
         <div class="pull-right hidden-xs">
             <b>Version</b> 2.4.18
         </div>
-        <strong>Copyright &copy; {% now "Y" %} <a href="#">Atif and Ali</a>.</strong> All rights
+        <strong>Copyright &copy; {% now "Y" %} <a href="#">DP</a>.</strong> All rights
         reserved.
     </footer>
 </div>

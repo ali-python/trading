@@ -7,7 +7,9 @@ from calendar import monthrange
 from dateutil.relativedelta import relativedelta
 import datetime
 from customer.models import Customer
-from product.models import StockOut
+from product.models import StockOut, Product
+from expense.models import Expense
+from supplier.models import Supplier, SupplierStatement
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import forms as auth_forms
@@ -101,6 +103,77 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
+        today = timezone.now().date()
+
+        # Today's stats
+        today_invoices = Invoice.objects.filter(date=today)
+        today_sales_count = today_invoices.count()
+        today_revenue = today_invoices.aggregate(total=Sum('grand_total'))['total'] or 0
+        today_expenses = Expense.objects.filter(date=today).aggregate(total=Sum('amount'))['total'] or 0
+        today_profit = float(today_revenue) - float(today_expenses)
+
+        # Product stock stats
+        all_products = list(Product.objects.all())
+        low_stock_products = [
+            p for p in all_products
+            if 0 < p.product_available_items() <= float(p.notify_qty or 0)
+        ]
+        out_of_stock = [p for p in all_products if p.product_available_items() <= 0]
+
+        # Overall stats
+        total_customers = Customer.objects.count()
+        total_suppliers = Supplier.objects.count()
+        total_products = len(all_products)
+
+        supplier_agg = SupplierStatement.objects.aggregate(
+            total_amount=Sum('supplier_amount'),
+            total_paid=Sum('payment_amount')
+        )
+        total_supplier_balance = float(supplier_agg['total_amount'] or 0) - float(supplier_agg['total_paid'] or 0)
+        total_receivable = Invoice.objects.aggregate(total=Sum('remaining_payment'))['total'] or 0
+
+        # Monthly stats
+        month_start = today.replace(day=1)
+        monthly_revenue = Invoice.objects.filter(date__gte=month_start).aggregate(total=Sum('grand_total'))['total'] or 0
+        monthly_expenses = Expense.objects.filter(date__gte=month_start).aggregate(total=Sum('amount'))['total'] or 0
+        monthly_profit = float(monthly_revenue) - float(monthly_expenses)
+
+        # Last 7 days chart data
+        last_7_days = []
+        last_7_sales = []
+        last_7_profit = []
+        for i in range(6, -1, -1):
+            day = today - datetime.timedelta(days=i)
+            day_sales = Invoice.objects.filter(date=day).aggregate(total=Sum('grand_total'))['total'] or 0
+            day_expense = Expense.objects.filter(date=day).aggregate(total=Sum('amount'))['total'] or 0
+            last_7_days.append(day.strftime('%d %b'))
+            last_7_sales.append(float(day_sales))
+            last_7_profit.append(float(day_sales) - float(day_expense))
+
+        recent_invoices = Invoice.objects.filter(date=today).select_related('customer').order_by('-id')[:10]
+
+        context.update({
+            'today': today,
+            'today_sales_count': today_sales_count,
+            'today_revenue': today_revenue,
+            'today_expenses': today_expenses,
+            'today_profit': today_profit,
+            'total_products': total_products,
+            'low_stock_products': low_stock_products[:5],
+            'low_stock_count': len(low_stock_products),
+            'out_of_stock_count': len(out_of_stock),
+            'total_customers': total_customers,
+            'total_suppliers': total_suppliers,
+            'total_supplier_balance': total_supplier_balance,
+            'total_receivable': total_receivable,
+            'monthly_revenue': monthly_revenue,
+            'monthly_expenses': monthly_expenses,
+            'monthly_profit': monthly_profit,
+            'last_7_days': last_7_days,
+            'last_7_sales': last_7_sales,
+            'last_7_profit': last_7_profit,
+            'recent_invoices': recent_invoices,
+        })
         return context
 
 
