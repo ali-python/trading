@@ -90,21 +90,39 @@ class LogoutView(RedirectView):
     def get(self, request, *args, **kwargs):
         return HttpResponseRedirect(reverse('common:login'))
 
+from django.views.generic import TemplateView
+from django.utils import timezone
+from django.db.models import Sum
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+import datetime
+
+from django.views.generic import TemplateView
+from django.utils import timezone
+from django.db.models import Sum, F
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+import datetime
+
+
 class IndexView(TemplateView):
     template_name = 'index.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.is_authenticated:
+        if not request.user.is_authenticated:
             return HttpResponseRedirect(reverse('common:login'))
-        return super(IndexView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        today = timezone.now().date()
+        context = super().get_context_data(**kwargs)
 
-        # -------------------------
+        # ✅ USE THIS (fixes today issue)
+        today = timezone.now().date()
+        month_start = today.replace(day=1)
+
+        # =========================
         # TODAY DATA
-        # -------------------------
+        # =========================
         today_invoices = Invoice.objects.filter(date=today)
 
         today_sales_count = today_invoices.count()
@@ -113,75 +131,96 @@ class IndexView(TemplateView):
             total=Sum('grand_total')
         )['total'] or 0
 
-        today_cost = PurchasedItem.objects.filter(
-            invoice__date=today
-        ).aggregate(
-            total=Sum('purchase_amount')
-        )['total'] or 0
-
+        # ✅ EXPENSE
         today_expenses = Expense.objects.filter(date=today).aggregate(
             total=Sum('amount')
         )['total'] or 0
 
-        today_profit = float(today_revenue) - float(today_cost) - float(today_expenses)
+        # ✅ PROFIT = selling - buying - expense
+        today_profit_data = StockOut.objects.filter(date=today).aggregate(
+            profit=Sum(F('selling_price') - F('buying_price'))
+        )
 
-        # -------------------------
+        today_profit = float(today_profit_data['profit'] or 0) - float(today_expenses)
+
+        # =========================
         # PRODUCT STOCK
-        # -------------------------
-        all_products = list(Product.objects.all())
+        # =========================
+        products = Product.objects.all()
 
-        low_stock_products = [
-            p for p in all_products
-            if 0 < p.product_available_items() <= float(p.notify_qty or 0)
-        ]
+        low_stock_products = []
+        out_of_stock_products = []
 
-        out_of_stock = [
-            p for p in all_products
-            if p.product_available_items() <= 0
-        ]
+        for p in products:
+            available = p.product_available_items()
+            threshold = float(p.notify_qty or 0)
 
-        # -------------------------
+            if available <= 0:
+                out_of_stock_products.append(p)
+            elif available <= threshold:
+                low_stock_products.append(p)
+
+        # =========================
         # GENERAL STATS
-        # -------------------------
+        # =========================
         total_customers = Customer.objects.count()
         total_suppliers = Supplier.objects.count()
-        total_products = len(all_products)
+        total_products = products.count()
 
         supplier_agg = SupplierStatement.objects.aggregate(
             total_amount=Sum('supplier_amount'),
             total_paid=Sum('payment_amount')
         )
 
-        total_supplier_balance = float(supplier_agg['total_amount'] or 0) - float(supplier_agg['total_paid'] or 0)
+        total_supplier_balance = (
+            float(supplier_agg['total_amount'] or 0) -
+            float(supplier_agg['total_paid'] or 0)
+        )
 
         total_receivable = Invoice.objects.aggregate(
             total=Sum('remaining_payment')
         )['total'] or 0
 
-        # -------------------------
+        # =========================
         # MONTHLY DATA
-        # -------------------------
-        month_start = today.replace(day=1)
-
+        # =========================
         monthly_revenue = Invoice.objects.filter(date__gte=month_start).aggregate(
             total=Sum('grand_total')
-        )['total'] or 0
-
-        monthly_cost = PurchasedItem.objects.filter(
-            invoice__date__gte=month_start
-        ).aggregate(
-            total=Sum('purchase_amount')
         )['total'] or 0
 
         monthly_expenses = Expense.objects.filter(date__gte=month_start).aggregate(
             total=Sum('amount')
         )['total'] or 0
 
-        monthly_profit = float(monthly_revenue) - float(monthly_cost) - float(monthly_expenses)
+        monthly_profit_data = StockOut.objects.filter(date__gte=month_start).aggregate(
+            profit=Sum(F('selling_price') - F('buying_price'))
+        )
 
-        # -------------------------
-        # LAST 7 DAYS CHART
-        # -------------------------
+        monthly_profit = float(monthly_profit_data['profit'] or 0) - float(monthly_expenses)
+
+        # =========================
+        # LAST 7 DAYS
+        # =========================
+        start_7_days = today - datetime.timedelta(days=6)
+
+        sales_data = Invoice.objects.filter(date__gte=start_7_days)\
+            .values('date')\
+            .annotate(total=Sum('grand_total'))
+
+        expense_data = Expense.objects.filter(date__gte=start_7_days)\
+            .values('date')\
+            .annotate(total=Sum('amount'))
+
+        profit_data = StockOut.objects.filter(date__gte=start_7_days)\
+            .values('date')\
+            .annotate(
+                profit=Sum(F('selling_price') - F('buying_price'))
+            )
+
+        sales_dict = {x['date']: float(x['total'] or 0) for x in sales_data}
+        expense_dict = {x['date']: float(x['total'] or 0) for x in expense_data}
+        profit_dict = {x['date']: float(x['profit'] or 0) for x in profit_data}
+
         last_7_days = []
         last_7_sales = []
         last_7_profit = []
@@ -189,37 +228,24 @@ class IndexView(TemplateView):
         for i in range(6, -1, -1):
             day = today - datetime.timedelta(days=i)
 
-            day_revenue = Invoice.objects.filter(date=day).aggregate(
-                total=Sum('grand_total')
-            )['total'] or 0
-
-            day_cost = PurchasedItem.objects.filter(
-                invoice__date=day
-            ).aggregate(
-                total=Sum('purchase_amount')
-            )['total'] or 0
-
-            day_expense = Expense.objects.filter(date=day).aggregate(
-                total=Sum('amount')
-            )['total'] or 0
+            revenue = sales_dict.get(day, 0)
+            expense = expense_dict.get(day, 0)
+            profit = profit_dict.get(day, 0) - expense
 
             last_7_days.append(day.strftime('%d %b'))
-            last_7_sales.append(float(day_revenue))
+            last_7_sales.append(revenue)
+            last_7_profit.append(profit)
 
-            last_7_profit.append(
-                float(day_revenue) - float(day_cost) - float(day_expense)
-            )
-
-        # -------------------------
+        # =========================
         # RECENT INVOICES
-        # -------------------------
+        # =========================
         recent_invoices = Invoice.objects.filter(date=today)\
             .select_related('customer')\
             .order_by('-id')[:10]
 
-        # -------------------------
+        # =========================
         # CONTEXT
-        # -------------------------
+        # =========================
         context.update({
             'today': today,
 
@@ -231,7 +257,7 @@ class IndexView(TemplateView):
             'total_products': total_products,
             'low_stock_products': low_stock_products[:5],
             'low_stock_count': len(low_stock_products),
-            'out_of_stock_count': len(out_of_stock),
+            'out_of_stock_count': len(out_of_stock_products),
 
             'total_customers': total_customers,
             'total_suppliers': total_suppliers,
@@ -250,7 +276,6 @@ class IndexView(TemplateView):
         })
 
         return context
-
 class MonthlyReports(TemplateView):
     template_name = 'reports/reports.html'
 

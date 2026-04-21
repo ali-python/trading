@@ -54,24 +54,30 @@ class InvoiceListView(ListView):
         return queryset.order_by('-id')
 
 
+from django.utils import timezone
+
 class CreateInvoiceTemplateView(TemplateView):
     template_name = 'sales/create_invoice.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.is_authenticated:
+        if not request.user.is_authenticated:
             return HttpResponseRedirect(reverse('common:login'))
 
-        return super(
-            CreateInvoiceTemplateView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(CreateInvoiceTemplateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+
         context.update({
             'customers': Customer.objects.all().order_by('name'),
             'products': Product.objects.all().order_by('name'),
-            'today_date': timezone.now().date(),
+
+            # ✅ FIXED (Pakistan date)
+            'today_date': timezone.localdate(),
+
             'banks': Bank.objects.all().order_by('name')
         })
+
         return context
 
 
