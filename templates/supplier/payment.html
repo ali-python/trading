@@ -2,7 +2,7 @@
 {% block supplier %}active{% endblock %}
 {% block payment %}active{% endblock %}
 {% block content %}
-{% load staticfiles %}
+{% load static %}
 <div class="content-wrapper">
     <section class="content">
         <div class="content-panel">
@@ -15,6 +15,7 @@
                         <br>
                         <br>
                         <div class="content-panel">
+                            <input type="hidden" id="supplier_id" value="{{ supplier.id }}">
                             <h3 class="text-center"> Add Payment | {{supplier.name}}</h3>
                             <div class="panel-body">
                                 <form class="form-horizontal add-ledger-form" action="{% url 'supplier:payment' pk=supplier.id %}" method="post" autocomplete="off">

@@ -2,11 +2,11 @@
 {% block supplier %}active{% endblock %}
 {% block add_supplier_statement %}active{% endblock %}
 {% block content %}
-{% load staticfiles %}
+{% load static %}
 <div class="content-wrapper">
   <section class="content">
     <br />
-    <a href="#"
+    <a href="{% url 'supplier:list_supplier' %}"
       ><button
         type="button"
         id="empolyee"

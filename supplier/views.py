@@ -9,26 +9,69 @@ from common.mixins import CustomLoginRequiredMixin
 
 # Create your views here.
 
+# class SupplierList(CustomLoginRequiredMixin, ListView):
+#     model = Supplier
+#     template_name = 'supplier/list_supplier.html'
+#     paginate_by = 100
+
+#     def get_context_data(self, **kwargs):
+#         context = super(SupplierList,self).get_context_data(**kwargs)
+#         supplier_statements = SupplierStatement.objects.all()
+#         try:
+#             supplier_amounts = supplier_statements.aggregate(Sum('supplier_amount'))
+#             supplier_amounts = supplier_amounts.get('supplier_amount__sum') or 0
+#             payment_amounts = supplier_statements.aggregate(Sum('payment_amount'))
+#             payment_amounts = payment_amounts.get('payment_amount__sum') or 0
+#         except:
+#             supplier_amounts = 0
+#             payment_amounts = 0
+#         total_remaining_amount = supplier_amounts - payment_amounts
+#         context.update({
+#              'total_remaining_amount': total_remaining_amount
+#         })
+#         return context
+
+# class SupplierList(CustomLoginRequiredMixin, ListView):
+#     model = Supplier
+#     template_name = 'supplier/list_supplier.html'
+#     paginate_by = 100
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+
+#         data = SupplierStatement.objects.aggregate(
+#             supplier_total=Sum('supplier_amount'),
+#             payment_total=Sum('payment_amount')
+#         )
+
+#         total_remaining = (data['supplier_total'] or 0) - (data['payment_total'] or 0)
+
+#         context['total_remaining_amount'] = total_remaining
+#         return context
+
+# 55555555
 class SupplierList(CustomLoginRequiredMixin, ListView):
     model = Supplier
     template_name = 'supplier/list_supplier.html'
     paginate_by = 100
 
+    def get_queryset(self):
+        return Supplier.objects.annotate(
+            supplier_total=Sum('statements__supplier_amount'),
+            payment_total=Sum('statements__payment_amount')
+        )
+
     def get_context_data(self, **kwargs):
-        context = super(SupplierList,self).get_context_data(**kwargs)
-        supplier_statements = SupplierStatement.objects.all()
-        try:
-            supplier_amounts = supplier_statements.aggregate(Sum('supplier_amount'))
-            supplier_amounts = supplier_amounts.get('supplier_amount__sum') or 0
-            payment_amounts = supplier_statements.aggregate(Sum('payment_amount'))
-            payment_amounts = payment_amounts.get('payment_amount__sum') or 0
-        except:
-            supplier_amounts = 0
-            payment_amounts = 0
-        total_remaining_amount = supplier_amounts - payment_amounts
-        context.update({
-             'total_remaining_amount': total_remaining_amount
-        })
+        context = super().get_context_data(**kwargs)
+
+        total_remaining = 0
+
+        for supplier in context['object_list']:
+            supplier_total = supplier.supplier_total or 0
+            payment_total = supplier.payment_total or 0
+            total_remaining += (supplier_total - payment_total)
+
+        context['total_remaining_amount'] = total_remaining
         return context
 
 class SupplierDelete(CustomLoginRequiredMixin, DeleteView):
@@ -38,30 +81,59 @@ class SupplierDelete(CustomLoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('supplier:list_supplier')
 
 
+# class SupplierStatementList(CustomLoginRequiredMixin, ListView):
+#     model = SupplierStatement
+#     template_name = 'supplier/list_supplier_statement.html'
+#     paginate_by = 100
+
+#     def get_queryset(self):
+#         pk = self.kwargs.get('pk')
+#         return SupplierStatement.objects.filter(supplier_id=pk).order_by('-date')
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         pk = self.kwargs.get('pk')
+#         supplier = get_object_or_404(Supplier, id=pk)
+#         statements = SupplierStatement.objects.filter(supplier=supplier)
+#         data = statements.aggregate(
+#             supplier_total=Sum('supplier_amount'),
+#             payment_total=Sum('payment_amount')
+#         )
+#         context.update({
+#             'supplier': supplier,
+#             'supplier_total_remaining_amount': (data['supplier_total'] or 0) - (data['payment_total'] or 0)
+#         })
+#         return context
 class SupplierStatementList(CustomLoginRequiredMixin, ListView):
     model = SupplierStatement
     template_name = 'supplier/list_supplier_statement.html'
     paginate_by = 100
 
     def get_queryset(self):
-        pk = self.kwargs.get('pk')
-        return SupplierStatement.objects.filter(supplier_id=pk).order_by('-date')
+        return SupplierStatement.objects.filter(
+            supplier_id=self.kwargs.get('pk')
+        ).order_by('-date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        pk = self.kwargs.get('pk')
-        supplier = get_object_or_404(Supplier, id=pk)
-        statements = SupplierStatement.objects.filter(supplier=supplier)
-        data = statements.aggregate(
+
+        supplier = get_object_or_404(Supplier, id=self.kwargs.get('pk'))
+
+        data = SupplierStatement.objects.filter(
+            supplier=supplier
+        ).aggregate(
             supplier_total=Sum('supplier_amount'),
             payment_total=Sum('payment_amount')
         )
+
+        remaining = (data['supplier_total'] or 0) - (data['payment_total'] or 0)
+
         context.update({
             'supplier': supplier,
-            'supplier_total_remaining_amount': (data['supplier_total'] or 0) - (data['payment_total'] or 0)
+            'supplier_total_remaining_amount': remaining
         })
-        return context
 
+        return context
 
 class SupplierAdd(CustomLoginRequiredMixin,FormView):
     form_class = SupplierFormView
@@ -128,11 +200,29 @@ class StatementPayment(CustomLoginRequiredMixin, FormView):
     form_class = SupplierStatementFormView
     template_name = 'supplier/payment.html'
 
+    # def form_valid(self, form):
+    #     obj = form.save(commit=False)
+    #     supplier = get_object_or_404(Supplier, id=self.kwargs.get('pk'))
+    #     obj.supplier = supplier
+    #     obj.save()
+
+    #     return HttpResponseRedirect(reverse(
+    #         'supplier:list_supplier_statement',
+    #         kwargs={'pk': supplier.id}
+    #     ))
     def form_valid(self, form):
-        obj = form.save()
-        return HttpResponseRedirect(reverse(
-            'supplier:list_supplier_statement', kwargs={
-                'pk': self.kwargs.get('pk')}))
+        obj = form.save(commit=False)
+        supplier = get_object_or_404(Supplier, id=self.kwargs.get('pk'))
+
+        obj.supplier = supplier
+        obj.supplier_amount = 0   # IMPORTANT
+        obj.payment_amount = form.cleaned_data.get('payment_amount')
+
+        obj.save()
+
+        return HttpResponseRedirect(
+            reverse('supplier:list_supplier_statement', kwargs={'pk': supplier.id})
+        )
 
     def form_invalid(self, form):
         return super(StatementPayment, self).form_invalid(form)
