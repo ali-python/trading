@@ -2,166 +2,433 @@
 {% block sales %}active{% endblock %}
 {% block invoice_list %}active{% endblock %}
 {% load static %}
-{% block content %}
-    <div class="content-wrapper">
-        <section class="content-header">
-            <a href="{% url 'sales:invoice_create' %}"><button type="button" id="invoice" class="btn btn-primary"  id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Create Invoice</button></a>
-            <button type="button" class="btn btn-primary print-invoice-btn" onclick="PrintInvoice('print-invoice')" >Print Invoice</button>
-            <ol class="breadcrumb">
-                <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="{% url 'sales:invoice_list' %}">Invoice List</a></li>
-                <li class="active">Invoice View</li>
-            </ol>
-        </section>
-        <section class="content">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="row print-invoice" id="print-invoice">
-                                <div class="col-lg-12 text-center">
-                                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-                                        <!-- <img src="{{ MEDIA_URL }}logo/tf.jpeg" alt="Logo" height="150"> -->
-                                        <h1 style="margin: 0;"><strong>DjangoPets</strong></h1>
-                                    </div>
-                                    <!-- <h4></h4> -->
-                                
 
-                                    <span>
-                                        <strong>Address: </strong>Shop Pakistan Pet & Vet Querry Road Quetta</span> <br>
-                                    <small class="f-size"><strong>Phone No:</strong> 0346-2789100 </small><small class="f-size"><strong>Mobile No: 0348-2619400 </strong></small>
-                                    <hr>
-                                    <u><h2>Invoice</h2></u>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="content-panel" style="padding: 5px">
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                {% if invoice.customer %}
-                                                    <div class="col-lg-12">
-                                                        <label><strong class="f-size">Customer Name:</strong></label> <span class="f-size">{{ invoice.customer.name|title }}</span>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <label><strong class="f-size">Mobile No:</strong></label> <span class="f-size">{{ invoice.customer.mobile|title }}</span>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <label><strong class="f-size">Customer CNIC:</strong></label> <span class="f-size">{{ invoice.customer.cnic|title }}</span>
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                            <div class="col-lg-6 text-right">
-                                                <div class="col-lg-12">
-                                                    <label><strong class="f-size">Billed Date:</strong></label><span class="f-size">{{ invoice.date|date:"d-m-y" }}</span>
-                                                </div>
-                                                <div class="col-lg-12">
-                                                    <label><strong class="f-size">Payment Type:</strong></label> <span class="f-size">{{ invoice.payment_type }}</span>
-                                                </div>
-                                                <div class="col-lg-12">
-                                                    <label><strong class="f-size">Receipt No:</strong></label> <span class="f-size">{{ invoice.id|stringformat:"07d"|title }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                        <tr class="item-row">
-                                                            <th >Item</th>
-                                                            <th >Quantity</th>
-                                                            <th >Total</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        {% for item in  invoice.invoice_purchased.all %}
-                                                            <tr id="hiderow">
-                                                                <td >
-                                                                    {{ item.item.name|title}} {{ item.item.category }}
-                                                                </td>
-                                                                <td >
-                                                                    {{ item.quantity|floatformat:-2}}
-                                                                </td>
-                                                                <td >
-                                                                    {{ item.purchase_amount|floatformat:-2 }}
-                                                                </td>
-                                                            </tr>
-                                                        {% endfor %}
-                                                        <tr><td colspan="4" style="color:white"></td></tr>
-                                                        <tr>
-                                                            <td><strong >Total Quantity: </strong><span id="totalQty" style="color: red; font-weight: bold;">{{ invoice.total_quantity }} </span> </td>
-                                                            <td class="text-right" ><strong >Grand Total</strong></td>
-                                                            <td><span id="grandTotal" style="color: red;">{{ invoice.grand_total|floatformat:-2 }}</span></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td></td>
-                                                            <td class="text-right"><strong >Cash Payment</strong></td>
-                                                            <td><span id="cash_payment" >{{ invoice.cash_payment|floatformat:-2 }}</span></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td></td>
-                                                            <td class="text-right"><strong >Returned Cash</strong></td>
-                                                            <td><span id="returned_cash"  >{{invoice.returned_payment|floatformat:-2 }}</span></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td></td>
-                                                            <td class="text-right"><strong >Received Amount</strong></td>
-                                                            <td><span id="receivedAmount" >{{ invoice.paid_amount|floatformat:-2 }}</span></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td></td>
-                                                            <td class="text-right" ><strong >Remaining Payment</strong></td>
-                                                            <td><span id="remainingAmount">{{ invoice.remaining_payment|floatformat:-2 }}</span></td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-12 col-md-12" style="text-align: center;">
-                                                <strong style="font-size:12px;color:#000">Thank You</strong>
-                                            </div>
-                                            <div class="col-xs-12 col-md-12" style="text-align: center;">
-                                                <strong class="f-size">
-                                                    DjangoPets</strong>
-                                            </div>
-                                           
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+{% block content %}
+<style>
+/* =====================================================
+   SCREEN STYLES — Compact professional invoice
+   ===================================================== */
+.invoice-wrapper {
+    max-width: 620px;
+    margin: 0 auto;
+}
+.invoice-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 24px 28px;
+}
+.invoice-header {
+    text-align: center;
+    border-bottom: 2px solid #222;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+}
+.invoice-header h3 {
+    margin: 0 0 2px 0;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.invoice-header .inv-address {
+    font-size: 12px;
+    color: #555;
+    margin: 0;
+}
+.invoice-header .inv-phones {
+    font-size: 11px;
+    color: #555;
+    margin: 2px 0 0 0;
+}
+.invoice-title {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 10px 0 12px 0;
+    border-bottom: 1px dashed #aaa;
+    padding-bottom: 8px;
+}
+.meta-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 12.5px;
+}
+.meta-grid .meta-left,
+.meta-grid .meta-right {
+    flex: 1;
+}
+.meta-grid .meta-right {
+    text-align: right;
+}
+.meta-row {
+    margin-bottom: 3px;
+}
+.meta-row strong {
+    color: #333;
+}
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin-bottom: 0;
+}
+.items-table thead tr {
+    background: #f5f5f5;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+.items-table th {
+    padding: 5px 8px;
+    font-weight: 600;
+    color: #333;
+}
+.items-table td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+.totals-section {
+    border-top: 1px dashed #aaa;
+    padding-top: 8px;
+    margin-top: 4px;
+}
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    padding: 2px 0;
+}
+.total-row.grand {
+    font-size: 14px;
+    font-weight: 700;
+    border-top: 1px solid #222;
+    border-bottom: 1px solid #222;
+    padding: 4px 0;
+    margin: 4px 0;
+    color: #c00;
+}
+.total-row.remaining {
+    color: #c00;
+    font-weight: 600;
+}
+.invoice-footer {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 12px;
+    color: #555;
+    border-top: 1px dashed #aaa;
+    padding-top: 8px;
+}
+
+/* =====================================================
+   PRINT STYLES — 80mm Thermal Receipt
+   ===================================================== */
+@media print {
+    /* Hide everything by default */
+    body * {
+        visibility: hidden !important;
+    }
+    /* Show only the receipt */
+    #thermal-receipt,
+    #thermal-receipt * {
+        visibility: visible !important;
+    }
+    #thermal-receipt {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 80mm;
+    }
+
+    /* Reset page margins for thermal */
+    @page {
+        size: 80mm auto;
+        margin: 4mm 3mm;
+    }
+
+    .receipt-shop-name {
+        text-align: center;
+        font-size: 14pt;
+        font-weight: 900;
+        letter-spacing: 1px;
+        margin: 0 0 1mm 0;
+    }
+    .receipt-address {
+        text-align: center;
+        font-size: 7pt;
+        margin: 0;
+    }
+    .receipt-phones {
+        text-align: center;
+        font-size: 7pt;
+        margin: 0 0 1mm 0;
+    }
+    .receipt-divider {
+        border: none;
+        border-top: 1px dashed #000;
+        margin: 1.5mm 0;
+    }
+    .receipt-title {
+        text-align: center;
+        font-size: 11pt;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin: 1mm 0;
+    }
+    .receipt-meta {
+        font-size: 7.5pt;
+        margin: 0.5mm 0;
+        display: flex;
+        justify-content: space-between;
+    }
+    .receipt-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 7.5pt;
+        margin: 1mm 0;
+    }
+    .receipt-table thead tr {
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+    }
+    .receipt-table th {
+        padding: 0.5mm 1mm;
+        font-weight: 700;
+        text-align: left;
+    }
+    .receipt-table th:last-child,
+    .receipt-table td:last-child {
+        text-align: right;
+    }
+    .receipt-table td {
+        padding: 0.5mm 1mm;
+    }
+    .receipt-total-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 7.5pt;
+        padding: 0.3mm 0;
+    }
+    .receipt-total-row.grand {
+        font-size: 9.5pt;
+        font-weight: 900;
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        padding: 0.8mm 0;
+        margin: 0.5mm 0;
+    }
+    .receipt-total-row.remaining {
+        font-size: 8.5pt;
+        font-weight: 700;
+    }
+    .receipt-footer {
+        text-align: center;
+        font-size: 8pt;
+        margin-top: 2mm;
+    }
+    .receipt-footer .thankyou {
+        font-size: 9pt;
+        font-weight: 700;
+    }
+}
+</style>
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <a href="{% url 'sales:invoice_create' %}">
+            <button type="button" class="btn btn-primary btn-sm">
+                <i class="fa fa-plus"></i> Create Invoice
+            </button>
+        </a>
+        <button type="button" class="btn btn-default btn-sm" onclick="window.print()">
+            <i class="fa fa-print"></i> Print Invoice
+        </button>
+        <ol class="breadcrumb">
+            <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="{% url 'sales:invoice_list' %}">Invoice List</a></li>
+            <li class="active">Invoice #{{ invoice.id|stringformat:"07d" }}</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <!-- ===== SCREEN VIEW ===== -->
+        <div class="invoice-wrapper">
+            <div class="invoice-card">
+                <div class="invoice-header">
+                    <h3>DjangoPets</h3>
+                    <p class="inv-address">Shop Pakistan Pet &amp; Vet, Querry Road, Quetta</p>
+                    <p class="inv-phones">Phone: 0346-2789100 &nbsp;|&nbsp; Mobile: 0348-2619400</p>
+                </div>
+
+                <div class="invoice-title">Invoice</div>
+
+                <div class="meta-grid">
+                    <div class="meta-left">
+                        {% if invoice.customer %}
+                        <div class="meta-row"><strong>Customer:</strong> {{ invoice.customer.name|title }}</div>
+                        <div class="meta-row"><strong>Mobile:</strong> {{ invoice.customer.mobile }}</div>
+                        <div class="meta-row"><strong>CNIC:</strong> {{ invoice.customer.cnic }}</div>
+                        {% else %}
+                        <div class="meta-row text-muted">Walk-in Customer</div>
+                        {% endif %}
+                    </div>
+                    <div class="meta-right">
+                        <div class="meta-row"><strong>Receipt #:</strong> {{ invoice.id|stringformat:"07d" }}</div>
+                        <div class="meta-row"><strong>Date:</strong> {{ invoice.date|date:"d-m-Y" }}</div>
+                        <div class="meta-row"><strong>Payment:</strong> {{ invoice.payment_type }}</div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </div>
-    <script>
-        function PrintInvoice(divName){
-             var printContents = document.getElementById(divName).innerHTML;
-             var originalContents = document.body.innerHTML;
-             document.body.innerHTML = printContents;
-             $('table').removeClass('table-bordered');
-             $('tr').css('border', '1px solid #000');
-             $('td').css('border', '1px solid #000');
-             $('th').css('border', '1px solid #000');
-             $('th').css('font-size', '8px');
-             $('tr').css('font-size', '8px');
-             $('td').css('font-size', '8px');
-             $('.f-size').css('font-size', '8px');
-             window.print();
-             document.body.innerHTML = originalContents;
-        }
-    </script>
-<script>
 
-$('#invoice').on('click', function() {
-    var $this = $(this);
-  $this.button('loading');
-    setTimeout(function() {
-       $this.button('reset');
-   }, 5000);
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th style="text-align:center;">Qty</th>
+                            <th style="text-align:right;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in invoice.invoice_purchased.all %}
+                        <tr>
+                            <td>{{ item.item.name|title }} {% if item.item.category %}<small class="text-muted">({{ item.item.category }})</small>{% endif %}</td>
+                            <td style="text-align:center;">{{ item.quantity|floatformat:-2 }}</td>
+                            <td style="text-align:right;">{{ item.purchase_amount|floatformat:0 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="totals-section">
+                    <div class="total-row">
+                        <span>Total Qty: <strong>{{ invoice.total_quantity }}</strong></span>
+                        <span></span>
+                    </div>
+                    <div class="total-row grand">
+                        <span>Grand Total</span>
+                        <span>Rs. {{ invoice.grand_total|floatformat:0 }}</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Cash Payment</span>
+                        <span>Rs. {{ invoice.cash_payment|floatformat:0 }}</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Cash Returned</span>
+                        <span>Rs. {{ invoice.cash_returned|floatformat:0 }}</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Paid Amount</span>
+                        <span>Rs. {{ invoice.paid_amount|floatformat:0 }}</span>
+                    </div>
+                    <div class="total-row remaining">
+                        <span>Remaining</span>
+                        <span>Rs. {{ invoice.remaining_payment|floatformat:0 }}</span>
+                    </div>
+                </div>
+
+                <div class="invoice-footer">
+                    <strong>Thank You for Shopping!</strong><br>
+                    DjangoPets — Your Trusted Pet Store
+                </div>
+            </div>
+        </div>
+        <!-- /.invoice-wrapper -->
+    </section>
+</div>
+
+<!-- ===== PRINT / THERMAL RECEIPT (hidden on screen, visible on print) ===== -->
+<div id="thermal-receipt" style="display:none;">
+    <p class="receipt-shop-name">DjangoPets</p>
+    <p class="receipt-address">Shop Pakistan Pet &amp; Vet</p>
+    <p class="receipt-address">Querry Road, Quetta</p>
+    <p class="receipt-phones">Ph: 0346-2789100 | 0348-2619400</p>
+    <hr class="receipt-divider">
+    <p class="receipt-title">INVOICE</p>
+    <hr class="receipt-divider">
+
+    <div class="receipt-meta">
+        <span><strong>Receipt #:</strong> {{ invoice.id|stringformat:"07d" }}</span>
+        <span>{{ invoice.date|date:"d/m/Y" }}</span>
+    </div>
+    {% if invoice.customer %}
+    <div class="receipt-meta">
+        <span><strong>Customer:</strong> {{ invoice.customer.name|title }}</span>
+    </div>
+    <div class="receipt-meta">
+        <span><strong>Mobile:</strong> {{ invoice.customer.mobile }}</span>
+    </div>
+    {% else %}
+    <div class="receipt-meta"><span>Walk-in Customer</span></div>
+    {% endif %}
+    <div class="receipt-meta">
+        <span><strong>Payment:</strong> {{ invoice.payment_type }}</span>
+    </div>
+
+    <hr class="receipt-divider">
+
+    <table class="receipt-table">
+        <thead>
+            <tr>
+                <th style="width:55%;">Item</th>
+                <th style="text-align:center; width:15%;">Qty</th>
+                <th style="text-align:right; width:30%;">Amt</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in invoice.invoice_purchased.all %}
+            <tr>
+                <td>{{ item.item.name|title }}</td>
+                <td style="text-align:center;">{{ item.quantity|floatformat:-2 }}</td>
+                <td style="text-align:right;">{{ item.purchase_amount|floatformat:0 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr class="receipt-divider">
+
+    <div class="receipt-total-row">
+        <span>Total Qty</span>
+        <span>{{ invoice.total_quantity }}</span>
+    </div>
+    <div class="receipt-total-row grand">
+        <span>GRAND TOTAL</span>
+        <span>Rs. {{ invoice.grand_total|floatformat:0 }}</span>
+    </div>
+    <div class="receipt-total-row">
+        <span>Cash Payment</span>
+        <span>Rs. {{ invoice.cash_payment|floatformat:0 }}</span>
+    </div>
+    <div class="receipt-total-row">
+        <span>Cash Returned</span>
+        <span>Rs. {{ invoice.cash_returned|floatformat:0 }}</span>
+    </div>
+    <div class="receipt-total-row">
+        <span>Paid Amount</span>
+        <span>Rs. {{ invoice.paid_amount|floatformat:0 }}</span>
+    </div>
+    <div class="receipt-total-row remaining">
+        <span>Remaining</span>
+        <span>Rs. {{ invoice.remaining_payment|floatformat:0 }}</span>
+    </div>
+
+    <hr class="receipt-divider">
+
+    <div class="receipt-footer">
+        <p class="thankyou">*** Thank You! ***</p>
+        <p>DjangoPets &mdash; Visit Again</p>
+    </div>
+</div>
+
+<script>
+// Make thermal receipt visible only during print via JS (belt-and-suspenders with @media print)
+window.addEventListener('beforeprint', function () {
+    document.getElementById('thermal-receipt').style.display = 'block';
+});
+window.addEventListener('afterprint', function () {
+    document.getElementById('thermal-receipt').style.display = 'none';
 });
 </script>
 
