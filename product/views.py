@@ -340,6 +340,30 @@ class KarigarProduct(FormView):
         })
         return context
 
+class StockInUpdate(UpdateView):
+    model = StockIn
+    form_class = StockInForm
+    template_name = 'product/update_stock_item.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+        return super(StockInUpdate, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        obj = form.save()
+        return HttpResponseRedirect(reverse('product:stockin_detail',
+                                            kwargs={'pk': obj.product.id}))
+
+    def form_invalid(self, form):
+        return super(StockInUpdate, self).form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(StockInUpdate, self).get_context_data(**kwargs)
+        context['product'] = self.get_object().product
+        return context
+
+
 class UpdateKarigarProduct(UpdateView):
     model = KarigarProducts
     form_class = KarigarProductsForm

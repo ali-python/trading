@@ -48,12 +48,13 @@
                                     <th class="text-center"><small>Buying %</small></th>
                                     <th class="text-center"><small>Total Buying Amount</small></th>
                                     <th class="text-center"><small>Order Dated</small></th>
+                                    <th class="text-center">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody class="product-table-body text-center">
+                                    {% load humanize %}
                                     {% for stock_in in object_list %}
                                     <tr>
-                                        {% load humanize %}
                                         <td>{{ stock_in.product }}</td>
                                         <td>{{ stock_in.stock_quantity|floatformat:-2|intcomma}}</td>
                                         <td>{{ stock_in.price_per_item|floatformat:-2|intcomma }}</td>
@@ -63,6 +64,11 @@
                                         <td>{{ stock_in.buying_percent|floatformat:-2|intcomma }}</td>
                                         <td>{{ stock_in.total_buying_amount|floatformat:-2|intcomma }}</td>
                                         <td>{{ stock_in.dated_order }}</td>
+                                        <td>
+                                            <a href="{% url 'product:stockin_update' pk=stock_in.pk %}" class="btn btn-xs btn-warning">
+                                                <i class="fa fa-pencil"></i> Edit
+                                            </a>
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
