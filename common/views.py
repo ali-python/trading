@@ -99,7 +99,7 @@ import datetime
 
 from django.views.generic import TemplateView
 from django.utils import timezone
-from django.db.models import Sum, F
+from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 import datetime
@@ -116,32 +116,35 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # ✅ USE THIS (fixes today issue)
-        today = timezone.now().date()
+        today = timezone.localdate()
         month_start = today.replace(day=1)
 
         # =========================
-        # TODAY DATA
+        # TODAY DATA (CASH BASED)
         # =========================
-        today_invoices = Invoice.objects.filter(date=today)
+        today_invoices = Invoice.objects.filter(
+            date=today,
+            paid_amount__gt=0
+        )
 
         today_sales_count = today_invoices.count()
 
         today_revenue = today_invoices.aggregate(
-            total=Sum('grand_total')
+            total=Sum('paid_amount')
         )['total'] or 0
 
-        # ✅ EXPENSE
+        today_cost = StockOut.objects.filter(
+            date=today,
+            invoice__paid_amount__gt=0
+        ).aggregate(
+            total=Sum('buying_price')
+        )['total'] or 0
+
         today_expenses = Expense.objects.filter(date=today).aggregate(
             total=Sum('amount')
         )['total'] or 0
 
-        # ✅ PROFIT = selling - buying - expense
-        today_profit_data = StockOut.objects.filter(date=today).aggregate(
-            profit=Sum(F('selling_price') - F('buying_price'))
-        )
-
-        today_profit = float(today_profit_data['profit'] or 0) - float(today_expenses)
+        today_profit = float(today_revenue) - float(today_cost) - float(today_expenses)
 
         # =========================
         # PRODUCT STOCK
@@ -182,44 +185,58 @@ class IndexView(TemplateView):
         )['total'] or 0
 
         # =========================
-        # MONTHLY DATA
+        # MONTHLY DATA (CASH BASED)
         # =========================
-        monthly_revenue = Invoice.objects.filter(date__gte=month_start).aggregate(
-            total=Sum('grand_total')
+        monthly_revenue = Invoice.objects.filter(
+            date__gte=month_start,
+            paid_amount__gt=0
+        ).aggregate(
+            total=Sum('paid_amount')
         )['total'] or 0
 
-        monthly_expenses = Expense.objects.filter(date__gte=month_start).aggregate(
+        monthly_cost = StockOut.objects.filter(
+            date__gte=month_start,
+            invoice__paid_amount__gt=0
+        ).aggregate(
+            total=Sum('buying_price')
+        )['total'] or 0
+
+        monthly_expenses = Expense.objects.filter(
+            date__gte=month_start
+        ).aggregate(
             total=Sum('amount')
         )['total'] or 0
 
-        monthly_profit_data = StockOut.objects.filter(date__gte=month_start).aggregate(
-            profit=Sum(F('selling_price') - F('buying_price'))
-        )
-
-        monthly_profit = float(monthly_profit_data['profit'] or 0) - float(monthly_expenses)
+        monthly_profit = float(monthly_revenue) - float(monthly_cost) - float(monthly_expenses)
 
         # =========================
-        # LAST 7 DAYS
+        # LAST 7 DAYS (CASH BASED)
         # =========================
         start_7_days = today - datetime.timedelta(days=6)
 
-        sales_data = Invoice.objects.filter(date__gte=start_7_days)\
-            .values('date')\
-            .annotate(total=Sum('grand_total'))
+        sales_data = Invoice.objects.filter(
+            date__gte=start_7_days,
+            paid_amount__gt=0
+        ).values('date').annotate(
+            total=Sum('paid_amount')
+        )
 
-        expense_data = Expense.objects.filter(date__gte=start_7_days)\
-            .values('date')\
-            .annotate(total=Sum('amount'))
+        cost_data = StockOut.objects.filter(
+            date__gte=start_7_days,
+            invoice__paid_amount__gt=0
+        ).values('date').annotate(
+            total=Sum('buying_price')
+        )
 
-        profit_data = StockOut.objects.filter(date__gte=start_7_days)\
-            .values('date')\
-            .annotate(
-                profit=Sum(F('selling_price') - F('buying_price'))
-            )
+        expense_data = Expense.objects.filter(
+            date__gte=start_7_days
+        ).values('date').annotate(
+            total=Sum('amount')
+        )
 
         sales_dict = {x['date']: float(x['total'] or 0) for x in sales_data}
+        cost_dict = {x['date']: float(x['total'] or 0) for x in cost_data}
         expense_dict = {x['date']: float(x['total'] or 0) for x in expense_data}
-        profit_dict = {x['date']: float(x['profit'] or 0) for x in profit_data}
 
         last_7_days = []
         last_7_sales = []
@@ -229,12 +246,12 @@ class IndexView(TemplateView):
             day = today - datetime.timedelta(days=i)
 
             revenue = sales_dict.get(day, 0)
+            cost = cost_dict.get(day, 0)
             expense = expense_dict.get(day, 0)
-            profit = profit_dict.get(day, 0) - expense
 
             last_7_days.append(day.strftime('%d %b'))
             last_7_sales.append(revenue)
-            last_7_profit.append(profit)
+            last_7_profit.append(revenue - cost - expense)
 
         # =========================
         # RECENT INVOICES
@@ -276,6 +293,7 @@ class IndexView(TemplateView):
         })
 
         return context
+    
 class MonthlyReports(TemplateView):
     template_name = 'reports/reports.html'
 
