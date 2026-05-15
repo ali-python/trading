@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block supplier %}active{% endblock %}
+{% block list_supplier %}active{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+
+  <!-- Header -->
+  <section class="content-header">
+    <h1>
+      Supplier List
+      <small>Manage suppliers</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li>
+        <a href="{% url 'common:index' %}">
+          <i class="fa fa-dashboard"></i> Home
+        </a>
+      </li>
+      <li class="active">Supplier List</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="box box-primary">
+          
+          <!-- Box Header -->
+          <div class="box-header with-border clearfix">
+
+            <button
+              type="button"
+              class="btn btn-primary pull-left"
+              onclick="PrintInvoice('print-invoice')"
+            >
+              <i class="fa fa-print"></i> Print Details
+            </button>
+
+            <div class="pull-right">
+              <h4 style="margin: 5px 0;">
+                <b>
+                  Total Remaining:
+                  <span class="text-danger">
+                    {{ total_remaining_amount|floatformat:'-2' }}
+                  </span>
+                </b>
+              </h4>
+            </div>
+
+          </div>
+
+          <!-- Search -->
+          <div class="box-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    id="searchInput"
+                    class="form-control"
+                    placeholder="Search supplier..."
+                  >
+                  <span class="input-group-btn">
+                    <button class="btn btn-default">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="box-body table-responsive no-padding print-invoice" id="print-invoice">
+            <table class="table table-hover table-bordered text-center">
+              <thead class="bg-gray">
+                <tr>
+                  <th style="width: 5%">#</th>
+                  <th>Name</th>
+                  <th>Remaining</th>
+                  <th>Address</th>
+                  <th>Mobile</th>
+                  <th style="width: 15%" class="no-print">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody class="order-table-body">
+                {% for supplier in object_list %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td><b>{{ supplier.name }}</b></td>
+                  <td class="text-danger">
+                    {{ supplier.supplier_remaining_amount }}
+                  </td>
+                  <td>{{ supplier.address }}</td>
+                  <td>{{ supplier.mobile_no }}</td>
+                  <td class="no-print">
+                    <div class="btn-group">
+
+                      <a href="{% url 'supplier:list_supplier_statement' pk=supplier.id %}"
+                         class="btn btn-success btn-xs"
+                         title="View Statements">
+                        <i class="fa fa-info-circle"></i>
+                      </a>
+
+                      <a href="{% url 'supplier:supplier_confirm_delete' pk=supplier.id %}"
+                         class="btn btn-danger btn-xs"
+                         title="Delete Supplier">
+                        <i class="fa fa-trash"></i>
+                      </a>
+
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="6" class="text-center text-muted">
+                    No suppliers found
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Scripts -->
+<script>
+  function PrintInvoice(divName) {
+    var printContents = document.getElementById(divName).innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+  }
+
+  document.getElementById("searchInput").addEventListener("keyup", function () {
+    let value = this.value.toLowerCase();
+    let rows = document.querySelectorAll(".order-table-body tr");
+
+    rows.forEach(row => {
+      row.style.display = row.innerText.toLowerCase().includes(value)
+        ? ""
+        : "none";
+    });
+  });
+</script>
+{% endblock %}

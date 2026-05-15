@@ -1,95 +1,157 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block customer %}active{% endblock %}
 {% block customer_list %}active{% endblock %}
+
 {% block content %}
-{% load staticfiles %}
-
 <div class="content-wrapper">
-    <section class="content-header">
-        <ol class="breadcrumb">
-            <li><a href="{% url 'common:index' %}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Customer List</li>
-        </ol>
-    </section>
-    <br>
-    <section class="content">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="text-center"><b>Customers / Karigar List</b></h3>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="col-md-4 pull-left">
-                                <input type="text" class="form-control name_search" placeholder="Search by Name ..." >
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control id_search" placeholder="Search by CNIC ...">
-                            </div>
-                            <div class="col-md-2 pull-right">
-                                <button class="form-control btn btn-primary search">Search</button>
-                            </div>
-                        <br><br>
-                        <hr>
-                        </div>
-                    </div>
-                    <div class="box-body">
-                        <div class="table-responsive">
-                            <table class="table align-items-center table-striped table-bordered table-hover">
-                                <thead class="thead-dark">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>CNIC</th>
-                                    <th>Mobile</th>
-                                    <th>Unpaid Amount</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for customer in object_list %}
-                                {% if customer.karigar == False%}
-                                <tr>
 
-                                    <td>{{customer.name|title}}</td>
-                                    <td>{{customer.cnic}}</td>
-                                    <td>{{customer.mobile}}</td>
-                                    <td>{{ customer.get_unpaid_amount|floatformat:-2 }}</td>
-                                    <td class="text-center">
-                                        <a href="{% url 'customer:update' pk=customer.id %}"><button class="btn btn-primary btn-xs">Update</button></a>
-                                        <a href="{% url 'customer:ledger_list' pk=customer.id %}"><button class="btn btn-info btn-xs">Ledger</button></a>
-                                    </td>
-                                </tr>
-                                
-                                {% endif %}
+  <!-- Header -->
+  <section class="content-header">
+    <h1>
+      Customers
+      <small>Manage customers</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li>
+        <a href="{% url 'common:index' %}">
+          <i class="fa fa-dashboard"></i> Home
+        </a>
+      </li>
+      <li class="active">Customer List</li>
+    </ol>
+  </section>
 
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                            {% if paginator.page_range|length > 1 %}
-                            <div class="text-center col-lg-12">
-                                <ul class="pagination justify-content-center">
-                                    <li><a  style="background-color: #3070A8; color: white" class="page_previous" href="{% if page_obj.has_previous %}{% url 'customer:list' %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}" title="Previous"><<</a></li>
-                                    <li><a style="background-color: #3070A8; color: white" class="page_next" href="{% if page_obj.has_next %}{% url 'customer:list' %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}" title="Next">>></a></li>
-                                </ul>
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
+  <!-- Content -->
+  <section class="content">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="box box-primary">
+
+          <!-- Search -->
+          <div class="box-header with-border">
+            <div class="row">
+              <div class="col-md-4">
+                <input
+                  type="text"
+                  class="form-control name_search"
+                  placeholder="Search by name"
+                >
+              </div>
+
+              <div class="col-md-4">
+                <input
+                  type="text"
+                  class="form-control id_search"
+                  placeholder="Search by CNIC"
+                >
+              </div>
+
+              <div class="col-md-2">
+                <button class="btn btn-primary btn-block search">
+                  <i class="fa fa-search"></i> Search
+                </button>
+              </div>
             </div>
+          </div>
+
+          <!-- Table -->
+          <div class="box-body table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead class="bg-gray">
+                <tr>
+                  <th>Name</th>
+                  <th>CNIC</th>
+                  <th>Mobile</th>
+                  <th>Unpaid Amount</th>
+                  <th class="text-center" width="20%">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+              {% for customer in object_list %}
+                {% if not customer.karigar %}
+                <tr>
+                  <td><b>{{ customer.name|title }}</b></td>
+                  <td>{{ customer.cnic }}</td>
+                  <td>{{ customer.mobile }}</td>
+                  <td>
+                    <span class="label label-danger">
+                      {{ customer.get_unpaid_amount|floatformat:-2 }}
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <div class="btn-group">
+
+                      <a
+                        href="{% url 'customer:update' pk=customer.id %}"
+                        class="btn btn-primary btn-xs"
+                        title="Update"
+                      >
+                        <i class="fa fa-edit"></i> Update
+                      </a>
+
+                      <a
+                        href="{% url 'customer:ledger_list' pk=customer.id %}"
+                        class="btn btn-info btn-xs"
+                        title="Ledger"
+                      >
+                        <i class="fa fa-book"></i> Ledger
+                      </a>
+
+                    </div>
+                  </td>
+                </tr>
+                {% endif %}
+              {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center text-muted">
+                    No customers found
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          {% if paginator.page_range|length > 1 %}
+          <div class="box-footer text-center">
+            <ul class="pagination pagination-sm">
+              <li>
+                <a href="{% if page_obj.has_previous %}{% url 'customer:list' %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}">
+                  &laquo; Prev
+                </a>
+              </li>
+              <li>
+                <a href="{% if page_obj.has_next %}{% url 'customer:list' %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}">
+                  Next &raquo;
+                </a>
+              </li>
+            </ul>
+          </div>
+          {% endif %}
+
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 </div>
 {% endblock %}
+
 {% block script %}
-    {{ block.super }}
+{{ block.super }}
 <script>
 $(function () {
-    $('.search').on('click', function () {
-        var url = '{% url "customer:list" %}';
-        window.location.href  = url + '?' + 'customer_name=' + $('.name_search').val() + '&customer_id=' +  $('.id_search').val();
-    });
-})
+  $('.search').on('click', function () {
+    var url = '{% url "customer:list" %}';
+    window.location.href =
+      url +
+      '?customer_name=' + $('.name_search').val() +
+      '&customer_id=' + $('.id_search').val();
+  });
+});
 </script>
 {% endblock %}

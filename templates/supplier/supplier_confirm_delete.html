@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block supplier %}active{% endblock %}
+{% block supplier_confirm_delete %}active{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+
+  <section class="content">
+    <div class="row" style="min-height: 70vh; display: flex; align-items: center; justify-content: center;">
+      <div class="col-md-5">
+
+        <div class="box box-danger text-center">
+          
+          <!-- Header -->
+          <div class="box-header with-border">
+            <h3 class="box-title text-danger">
+              <i class="fa fa-exclamation-triangle"></i> Confirm Delete
+            </h3>
+          </div>
+
+          <!-- Body -->
+          <div class="box-body">
+            <p style="font-size: 16px;">
+              Are you sure you want to delete
+              <br>
+              <b class="text-danger">"{{ ex.name }}"</b> ?
+            </p>
+            <p class="text-muted">
+              This action cannot be undone.
+            </p>
+          </div>
+
+          <!-- Footer -->
+          <div class="box-footer text-center">
+            <form method="post" action="{% url 'supplier:supplier_confirm_delete' ex.id %}">
+              {% csrf_token %}
+
+              <a href="{% url 'supplier:list_supplier' %}" class="btn btn-default">
+                <i class="fa fa-times"></i> Cancel
+              </a>
+
+              <button type="submit" class="btn btn-danger">
+                <i class="fa fa-trash"></i> Yes, Delete
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

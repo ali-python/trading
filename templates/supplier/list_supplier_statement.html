@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block list_supplier %}active{% endblock %}
+{% block menu_supplier %}active{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+
+  <!-- Header -->
+  <section class="content-header">
+    <h1>
+      Supplier Statements
+      <small>Details & payments</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li>
+        <a href="{% url 'common:index' %}">
+          <i class="fa fa-dashboard"></i> Home
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'supplier:list_supplier' %}">Suppliers</a>
+      </li>
+      <li class="active">Statements</li>
+    </ol>
+  </section>
+
+  <!-- Content -->
+  <section class="content">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="box box-info">
+
+          <!-- Action Buttons -->
+          <div class="box-header with-border clearfix">
+
+            <div class="btn-group pull-left">
+              <a href="{% url 'supplier:list_supplier' %}" class="btn btn-default">
+                <i class="fa fa-arrow-left"></i> Supplier List
+              </a>
+              <a href="{% url 'supplier:add_supplier_statement' pk=supplier.id %}" class="btn btn-success">
+                <i class="fa fa-plus"></i> Create Statement
+              </a>
+              <a href="{% url 'supplier:payment' pk=supplier.id %}" class="btn btn-warning">
+                <i class="fa fa-money"></i> Payment
+              </a>
+            </div>
+
+            <button
+              type="button"
+              class="btn btn-primary pull-right"
+              onclick="PrintInvoice('print-invoice')"
+            >
+              <i class="fa fa-print"></i> Print
+            </button>
+
+          </div>
+
+          <!-- Box Body -->
+          <div class="box-body">
+
+            <!-- Title + Search -->
+            <div class="row">
+              <div class="col-md-6">
+                <h3>
+                  <b>{{ supplier.name }}</b>
+                  <small>Statement List</small>
+                </h3>
+              </div>
+
+              <div class="col-md-4 col-md-offset-2">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    id="searchInput"
+                    class="form-control"
+                    placeholder="Search statement..."
+                  >
+                  <span class="input-group-btn">
+                    <button class="btn btn-default">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+
+            <!-- Printable Area -->
+            <div id="print-invoice">
+
+              <!-- Summary -->
+              <div class="row">
+                <div class="col-md-12 text-right">
+                  <h4>
+                    Total Remaining:
+                    <span class="text-danger">
+                      {{ supplier_total_remaining_amount|floatformat:'-2' }}
+                    </span>
+                  </h4>
+                </div>
+              </div>
+
+              <!-- Table -->
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center">
+                  <thead class="bg-gray">
+                    <tr>
+                      <th>#</th>
+                      <th>Supplier</th>
+                      <th>Supplier Amount</th>
+                      <th>Payment</th>
+                      <th>Remaining</th>
+                      <th>Description</th>
+                      <th>Date</th>
+                      <th width="8%" class="no-print">Action</th>
+                    </tr>
+                  </thead>
+
+                  <tbody class="order-table-body">
+                    {% for statement in object_list %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td><b>{{ statement.supplier.name }}</b></td>
+                      <td>{{ statement.supplier_amount }}</td>
+                      <td class="text-success">{{ statement.payment_amount|default:0 }}</td>
+                      <td class="text-danger">{{ statement.remaining_amount|default:0 }}</td>
+                      <td>{{ statement.description|default:"-" }}</td>
+                      <td>{{ statement.date }}</td>
+                      <td class="no-print">
+                        <a
+                          href="{% url 'supplier:update_supplier_statement' pk=statement.id %}"
+                          class="btn btn-warning btn-xs"
+                          title="Edit"
+                        >
+                          <i class="fa fa-edit"></i>
+                        </a>
+                      </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="8" class="text-muted text-center">
+                        No statements found
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Scripts -->
+<script>
+  function PrintInvoice(divName) {
+    var printContents = document.getElementById(divName).innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+  }
+
+  document.getElementById("searchInput").addEventListener("keyup", function () {
+    let value = this.value.toLowerCase();
+    let rows = document.querySelectorAll(".order-table-body tr");
+
+    rows.forEach(row => {
+      row.style.display = row.innerText.toLowerCase().includes(value)
+        ? ""
+        : "none";
+    });
+  });
+</script>
+{% endblock %}

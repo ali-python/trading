@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block supplier %}active{% endblock %}
+{% block payment %}active{% endblock %}
+{% block content %}
+{% load static %}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="content-panel">
+            <div class='row'>
+                <div class='col-lg-12 my-5'>
+                    <a href="{% url 'supplier:list_supplier_statement' pk=supplier.id %}"><button class="btn btn-success btn-md" title="All Statements"><i class="fa  fa-info"></i> All Statements </button></a>
+                </div>
+                <div class="col-md-6 pull-left">
+                    <div class="box">
+                        <br>
+                        <br>
+                        <div class="content-panel">
+                            <input type="hidden" id="supplier_id" value="{{ supplier.id }}">
+                            <h3 class="text-center"> Add Payment | {{supplier.name}}</h3>
+                            <div class="panel-body">
+                                <form class="form-horizontal add-ledger-form" action="{% url 'supplier:payment' pk=supplier.id %}" method="post" autocomplete="off">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            {% csrf_token %}
+                                            <span class="name-error" style="color: red; display: none" >this field is requried</span>
+                                            <input type="hidden" class="form-control name" name="supplier" value="{{ supplier.id }}" placeholder="{{ supplier }}" readonly><br>
+                                            <label><strong>Payment Amount</strong></label>
+                                            <span class="mobile-error" style="color: red; display: none" >this field is requried</span>
+                                            <input type="text" class="form-control mobile" name="payment_amount" placeholder="Payable Amount"><br>
+                                            <label><strong>description no</strong></label>
+                                            <input type="text" class="form-control mobile" name="description" placeholder="Description"><br>
+                                            <label><strong>Date</strong></label>
+                                            <input type="date" class="form-control mobile" name="date" placeholder="Date"><br>
+                                            <button type="submit" id="save" class="btn btn-primary ledger-submit-btn" style="float: right" id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save Statement</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}
